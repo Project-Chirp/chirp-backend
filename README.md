@@ -1,2 +1,3 @@
-# twitter-clone-backend
+# Tweeter - Backend
+
 Backend of Twitter clone
