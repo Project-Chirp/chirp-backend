@@ -1,4 +1,4 @@
-const pool = require("../db");
+const pool = require("../database/db");
 const appUsersQueries = require("../Models/appUsersModel");
 
 const getAppUsers = (req, res) => {
