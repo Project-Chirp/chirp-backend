@@ -1,25 +1,23 @@
 {
-  "name": "twitter-clone-backend",
+  "name": "twitter-clone",
   "version": "1.0.0",
-  "description": "Backend of Twitter clone",
+  "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/TweetClone/twitter-clone-backend.git"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server",
+    "dev": "nodemon server"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/TweetClone/twitter-clone-backend/issues"
-  },
-  "homepage": "https://github.com/TweetClone/twitter-clone-backend#readme",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "pg": "^8.8.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
   }
 }
