@@ -13,6 +13,10 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
+app.get("/protected", (req, res) => {
+  res.send("Hello from protected route!");
+});
+
 app.use("/api/appUsers", appUserRoute);
 
 // let str = {
