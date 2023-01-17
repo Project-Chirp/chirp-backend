@@ -1,23 +1,70 @@
 const express = require("express");
+const { expressjwt: jwt } = require("express-jwt");
+const jwks = require("jwks-rsa");
+const axios = require("axios");
 const appUserRoute = require("./Routes/appUsersRoutes");
 
 const cors = require("cors");
+const { response } = require("express");
 const app = express();
 const port = process.env.PORT || 3001;
-app.listen(port, () => console.log(`Listening on port ${port}....`));
 
 app.use(express.json());
 app.use(cors());
+
+const verifyJwt = jwt({
+  secret: jwks.expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 5,
+    jwksUri: "https://dev-8e2eney2zngtvaof.us.auth0.com/.well-known/jwks.json",
+  }),
+  audience: "tweeter identifier",
+  issuer: "https://dev-8e2eney2zngtvaof.us.auth0.com/",
+  algorithms: ["RS256"],
+}).unless({ path: ["/"] });
+
+app.use(verifyJwt);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.get("/protected", (req, res) => {
-  res.send("Hello from protected route!");
+app.get("/protected", async (req, res) => {
+  try {
+    const accessToken = req.headers.authorization.split("")[1];
+    const response = await axios.get(
+      "https://dev-8e2eney2zngtvaof.us.auth0.com/userinfo",
+      {
+        header: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const userInfo = response.data;
+    console.log(userInfo);
+    res.send(userInfo);
+  } catch (error) {
+    res.send(error.message);
+  }
+
+  // res.send("Hello from protected route!");
+});
+
+app.use((req, res, next) => {
+  const error = new Error("Not found");
+  error.status = 404;
+  next(error);
+});
+
+app.use((error, req, res, next) => {
+  const status = error.status || 500;
+  const message = error.message || "Internal server error";
+  res.status(status).send(message);
 });
 
 app.use("/api/appUsers", appUserRoute);
+app.listen(port, () => console.log(`Listening on port ${port}....`));
 
 // let str = {
 //   content: "Hello World!",
