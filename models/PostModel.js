@@ -1,5 +1,9 @@
-const getAllPosts =
-  "SELECT u.email, u.display_name, p.text_content, p.post_timestamp FROM post p INNER JOIN app_user u on p.user_id = u.user_id";
+const getAllPosts = `SELECT u.email AS "username", 
+   u.display_name AS "displayName",
+   p.text_content AS "textContent",
+   p.post_timestamp AS "timestamp"
+   FROM post AS p 
+   INNER JOIN app_user AS u ON p.user_id = u.user_id`;
 
 module.exports = {
   getAllPosts,
