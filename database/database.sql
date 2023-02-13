@@ -2,6 +2,7 @@ CREATE DATABASE twitter_clone;
 
 CREATE TABLE app_user(
     user_id SERIAL PRIMARY KEY,
+    display_name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
@@ -86,11 +87,11 @@ CREATE TABLE follow(
 
 
 /*Inserting User*/
-INSERT INTO app_user (email, password_hash, last_name, first_name, birth_date)
-VALUES ('johndoe@gmail.com', '234567', 'Doe', 'John', '1999-01-08');
+INSERT INTO app_user (email, display_name, password_hash, last_name, first_name, birth_date)
+VALUES ('johndoe@gmail.com', 'JohnDoe', '234567', 'Doe', 'John', '1999-01-08');
 
-INSERT INTO app_user (email, password_hash, last_name, first_name, birth_date)
-VALUES ('janedoe@gmail.com', '234567', 'Doe', 'Jane', '1998-02-18');
+INSERT INTO app_user (email, display_name, password_hash, last_name, first_name, birth_date)
+VALUES ('janedoe@gmail.com', 'JaneDoe', '234567', 'Doe', 'Jane', '1998-02-18');
 
 INSERT INTO app_user (email, password_hash, last_name, first_name, birth_date)
 VALUES ('tracey.bond@gmail.com', '342522', 'Bond', 'Tracey', '1980-05-22');
