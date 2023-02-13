@@ -10,15 +10,16 @@ const getPosts = (req, res) => {
 
 const addPost = async (req, res) => {
   try {
-    console.log(req.body);
     const { text_content } = req.body;
-    console.log(text_content);
     const now = new Date();
-    const newPost = await pool.query(
-      `INSERT INTO post (user_id, post_timestamp, text_content, is_repost, is_quote_post, is_reply) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-      [1, now, text_content, false, false, false]
-    );
-    console.log(newPost.rows);
+    pool.query(postQueries.addPost, [
+      1,
+      now,
+      text_content,
+      false,
+      false,
+      false,
+    ]);
   } catch (err) {
     console.log(err);
   }
