@@ -24,64 +24,64 @@ CREATE TABLE message(
 );
 
 CREATE TABLE message_media(
-    message_id INT NOT NULL,
-    CONSTRAINT fk_message_id
-        FOREIGN KEY(message_id)
-            REFERENCES message(message_id),
-    link TEXT NOT NULL,
-    PRIMARY KEY(message_id, link)
+    "messageId" INT NOT NULL,
+    CONSTRAINT "fkMessageId"
+        FOREIGN KEY("messageId")
+            REFERENCES message("messageId"),
+    "link" TEXT NOT NULL,
+    PRIMARY KEY("messageId", "link")
 );
 
 CREATE TABLE post(
-    post_id SERIAL PRIMARY KEY,
-    user_id INT NOT NULL,
-     CONSTRAINT fk_user_id
-        FOREIGN KEY(user_id)
-            REFERENCES app_user(user_id),
-    parent_post_id INT,
-    CONSTRAINT fk_parent_post_id
-        FOREIGN KEY(parent_post_id)
-            REFERENCES post(post_id),
-    post_timestamp TIMESTAMPTZ NOT NULL,
-    text_content TEXT,
-    is_repost BOOLEAN NOT NULL,
-    is_quote_post BOOLEAN NOT NULL,
-    is_reply BOOLEAN NOT NULL
+    "postId" SERIAL PRIMARY KEY,
+    "userId" INT NOT NULL,
+     CONSTRAINT "fkUserId"
+        FOREIGN KEY("userId")
+            REFERENCES app_user("userId"),
+    "parentPostId" INT,
+    CONSTRAINT "fkParentPostId"
+        FOREIGN KEY("parentPostId")
+            REFERENCES post("postId"),
+    "postTimestamp" TIMESTAMPTZ NOT NULL,
+    "textContent" TEXT,
+    "isRepost" BOOLEAN NOT NULL,
+    "isQuotePost" BOOLEAN NOT NULL,
+    "isReply" BOOLEAN NOT NULL
 );
 
 CREATE TABLE post_media(
-    post_id INT NOT NULL,
-    CONSTRAINT fk_post_id
-        FOREIGN KEY(post_id)
-            REFERENCES post(post_id),
-    link TEXT NOT NULL,
-    PRIMARY KEY(post_id, link)
+    "postId" INT NOT NULL,
+    CONSTRAINT "fkPostId"
+        FOREIGN KEY("postId")
+            REFERENCES post("postId"),
+    "link" TEXT NOT NULL,
+    PRIMARY KEY("postId", "link")
 );
 
 CREATE TABLE liked_post(
-    user_id INT NOT NULL,
-    CONSTRAINT fk_user_id
-        FOREIGN KEY(user_id)
-            REFERENCES app_user(user_id),
-    post_id INT NOT NULL,
-    CONSTRAINT fk_post_id
-        FOREIGN KEY(post_id)
-            REFERENCES post(post_id),
-    PRIMARY KEY(user_id,post_id)
+    "userId" INT NOT NULL,
+    CONSTRAINT "fkUserId"
+        FOREIGN KEY("userId")
+            REFERENCES app_user("userId"),
+    "postId" INT NOT NULL,
+    CONSTRAINT "fkPostId"
+        FOREIGN KEY("postId")
+            REFERENCES post("postId"),
+    PRIMARY KEY("userId","postId")
 );
 
 CREATE TABLE follow(
-    follower_user_id INT NOT NULL,
-    CONSTRAINT fk_follower_user_id
-        FOREIGN KEY(follower_user_id)
-            REFERENCES app_user(user_id),
-    followed_user_id INT NOT NULL,
-    CONSTRAINT fk_followed_user_id
-        FOREIGN KEY(followed_user_id)
-            REFERENCES app_user(user_id),
-    followed_date DATE NOT NULL,
-    follow_status BOOLEAN NOT NULL,
-    PRIMARY KEY(follower_user_id, followed_user_id)
+    "followerUserId" INT NOT NULL,
+    CONSTRAINT "fkFollowerUserId"
+        FOREIGN KEY("followerUserId")
+            REFERENCES app_user("userId"),
+    "followedUserId" INT NOT NULL,
+    CONSTRAINT "fkFollowedUserId"
+        FOREIGN KEY("followedUserId")
+            REFERENCES app_user("userId"),
+    "followedDate" DATE NOT NULL,
+    "followStatus" BOOLEAN NOT NULL,
+    PRIMARY KEY("followerUserId", "followedUserId")
 );
 
 
