@@ -12,7 +12,7 @@ CREATE TABLE app_user(
 CREATE TABLE message(
     "messageId" SERIAL PRIMARY KEY,
     "messageTimestamp" TIMESTAMPTZ NOT NULL,
-    "textContext" TEXT,
+    "textContent" TEXT,
     "sentUserId" INT NOT NULL,
     CONSTRAINT "fkSentUserId"
         FOREIGN KEY("sentUserId")
@@ -103,32 +103,26 @@ VALUES ( 'Joe Anderson', 'Anderson', 'joe.anderson@gmail.com', '2021-03-08');
 
 
 /*Inserting Messages*/
-INSERT INTO message (message_timestamp, text_content, sent_user_id, received_user_id)
+INSERT INTO message ("messageTimestamp", "textContent", "sentUserId", "receivedUserId")
 VALUES ('2022-12-27 21:26:39.023989-07', 'Hey. How are you?', 1, 2);
 
-INSERT INTO message (message_timestamp, text_content, sent_user_id, received_user_id)
+INSERT INTO message ("messageTimestamp", "textContent", "sentUserId", "receivedUserId")
 VALUES ('2022-12-27 21:30:55.023489-07', 'Im doing okay. What are you up to?', 2, 1);
 
-INSERT INTO message (message_timestamp, text_content, sent_user_id, received_user_id)
+INSERT INTO message ("messageTimestamp", "textContent", "sentUserId", "receivedUserId")
 VALUES ('2022-12-27 21:31:10.027424-07', 'Not much.. just work and school', 1, 2);
 
-INSERT INTO message (message_timestamp, text_content, sent_user_id, received_user_id)
+INSERT INTO message ("messageTimestamp", "textContent", "sentUserId", "receivedUserId")
 VALUES ('2022-12-27 21:31:52.027343-07', 'Looking forward to Christmas', 1, 2);
 
-INSERT INTO message (message_timestamp, text_content, sent_user_id, received_user_id)
+INSERT INTO message ("messageTimestamp", "textContent", "sentUserId", "receivedUserId")
 VALUES ('2022-11-10 10:22:53.027233-07', 'Going skating. Wanna come?', 3, 4);
 
-INSERT INTO message (message_timestamp, text_content, sent_user_id, received_user_id)
+INSERT INTO message ("messageTimestamp", "textContent", "sentUserId", "receivedUserId")
 VALUES ('2022-11-10 10:25:36.024285-07', 'Yea sure, when and where', 4, 3);
 
-INSERT INTO message (message_timestamp, text_content, sent_user_id, received_user_id)
-VALUES ('2022-11-11 11:11:11.023285-07', 'I really liked your post', 5, 6);
-
-INSERT INTO message (message_timestamp, text_content, sent_user_id, received_user_id)
+INSERT INTO message ("messageTimestamp", "textContent", "sentUserId", "receivedUserId")
 VALUES ('2022-12-27 21:32:22.027653-07', 'Same here', 2, 1);
-
-INSERT INTO message (message_timestamp, text_content, sent_user_id, received_user_id)
-VALUES ('2022-11-11 11:12:01.023745-07', 'Thanks. Put a lot of time into it', 6, 5);
 
 /*Inserting Message Media*/
 
