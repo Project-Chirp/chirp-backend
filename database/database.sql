@@ -10,17 +10,17 @@ CREATE TABLE app_user(
 );
 
 CREATE TABLE message(
-    message_id SERIAL PRIMARY KEY,
-    message_timestamp TIMESTAMPTZ NOT NULL,
-    text_content TEXT,
-    sent_user_id INT NOT NULL,
-    CONSTRAINT fk_sent_user_id
-        FOREIGN KEY(sent_user_id)
-            REFERENCES app_user(user_id),
-    received_user_id INT NOT NULL,
-    CONSTRAINT fk_received_user_id
-        FOREIGN KEY(received_user_id)
-            REFERENCES app_user(user_id)
+    "messageId" SERIAL PRIMARY KEY,
+    "messageTimestamp" TIMESTAMPTZ NOT NULL,
+    "textContext" TEXT,
+    "sentUserId" INT NOT NULL,
+    CONSTRAINT "fkSentUserId"
+        FOREIGN KEY("sentUserId")
+            REFERENCES app_user("userId"),
+    "receivedUserId" INT NOT NULL,
+    CONSTRAINT "fkReceivedUserId"
+        FOREIGN KEY("receivedUserId")
+            REFERENCES app_user("userId")
 );
 
 CREATE TABLE message_media(
