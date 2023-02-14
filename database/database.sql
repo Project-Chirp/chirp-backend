@@ -86,23 +86,20 @@ CREATE TABLE follow(
 
 
 /*Inserting User*/
-INSERT INTO app_user (email, display_name, password_hash, last_name, first_name, birth_date)
-VALUES ('johndoe@gmail.com', 'JohnDoe', '234567', 'Doe', 'John', '1999-01-08');
+INSERT INTO app_user ( "displayName", "userName", "email", "joinedDate", "birthDate")
+VALUES ( 'John Doe', 'JohnDoe','johndoe@gmail.com', '2023-01-08', '1999-01-08');
 
-INSERT INTO app_user (email, display_name, password_hash, last_name, first_name, birth_date)
-VALUES ('janedoe@gmail.com', 'JaneDoe', '234567', 'Doe', 'Jane', '1998-02-18');
+INSERT INTO app_user ( "displayName", "userName", "email", "joinedDate", "birthDate")
+VALUES ( 'Michael Stewart', 'MStew','tracey.bond@gmail.com', '2022-05-18', '1980-05-22');
 
-INSERT INTO app_user (email, password_hash, last_name, first_name, birth_date)
-VALUES ('tracey.bond@gmail.com', '342522', 'Bond', 'Tracey', '1980-05-22');
+INSERT INTO app_user ( "displayName", "userName", "email", "joinedDate", "birthDate")
+VALUES ( 'Benjamin Davidson', 'BenDavid123','benjamin.davidson@gmail.com', '2023-02-04', '2001-10-02');
 
-INSERT INTO app_user (email, password_hash, last_name, first_name, birth_date)
-VALUES ('benjamin.davidson@gmail.com', '76745756', 'Davidson', 'Benjamin', '2001-10-02');
+INSERT INTO app_user ( "displayName", "userName", "email", "joinedDate", "birthDate")
+VALUES ( 'Alan Paterson', 'APaterson','alan.paterson@gmail.com', '2022-02-28', '2004-11-29');
 
-INSERT INTO app_user (email, password_hash, last_name, first_name, birth_date)
-VALUES ('alan.paterson@gmail.com', '573564422', 'Paterson', 'Alan', '2004-11-29');
-
-INSERT INTO app_user (email, password_hash, last_name, first_name, birth_date)
-VALUES ('joe.anderson@gmail.com', '9083432', 'Anderson', 'Joe', '2011-05-10');
+INSERT INTO app_user ( "displayName", "userName", "email", "joinedDate")
+VALUES ( 'Joe Anderson', 'Anderson', 'joe.anderson@gmail.com', '2021-03-08');
 
 
 /*Inserting Messages*/
