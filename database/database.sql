@@ -211,31 +211,10 @@ INSERT INTO follow ("followerUserId", "followedUserId", "followedDate", "followS
 VALUES (2, 5, '2022-09-12', true);
 
 INSERT INTO follow ("followerUserId", "followedUserId", "followedDate", "followStatus")
-VALUES (2, 6, '2022-09-15', true);
-
-INSERT INTO follow ("followerUserId", "followedUserId", "followedDate", "followStatus")
-VALUES (1, 6, '2022-09-09', true);
-
-INSERT INTO follow ("followerUserId", "followedUserId", "followedDate", "followStatus")
-VALUES (3, 6, '2022-09-10', true);
-
-INSERT INTO follow ("followerUserId", "followedUserId", "followedDate", "followStatus")
-VALUES (6, 1, '2022-09-11', true);
-
-INSERT INTO follow ("followerUserId", "followedUserId", "followedDate", "followStatus")
-VALUES (6, 2, '2022-09-20', false);
-
-INSERT INTO follow ("followerUserId", "followedUserId", "followedDate", "followStatus")
-VALUES (6, 5, '2022-09-25', true);
-
-INSERT INTO follow ("followerUserId", "followedUserId", "followedDate", "followStatus")
 VALUES (2, 3, '2022-09-10', true);
 
 INSERT INTO follow ("followerUserId", "followedUserId", "followedDate", "followStatus")
 VALUES (4, 3, '2022-09-11', true);
-
-INSERT INTO follow ("followerUserId", "followedUserId", "followedDate", "followStatus")
-VALUES (6, 3, '2022-09-14', true);
 
 INSERT INTO follow ("followerUserId", "followedUserId", "followedDate", "followStatus")
 VALUES (1, 4, '2022-09-11', true);
@@ -255,66 +234,49 @@ VALUES (1, 5, '2022-09-11', true);
 INSERT INTO follow ("followerUserId", "followedUserId", "followedDate", "followStatus")
 VALUES (4, 5, '2022-09-17', true);
 
-INSERT INTO follow ("followerUserId", "followedUserId", "followedDate", "followStatus")
-VALUES (4, 6, '2022-09-26', true);
-
-INSERT INTO follow ("followerUserId", "followedUserId", "followedDate", "followStatus")
-VALUES (5, 6, '2022-09-13', true);
-
 /*Insert Liked Post*/
-INSERT INTO liked_post (user_id, post_id)
+INSERT INTO liked_post ("userId", "postId")
 VALUES (2, 1);
 
-INSERT INTO liked_post (user_id, post_id)
+INSERT INTO liked_post ("userId", "postId")
 VALUES (3, 1);
-INSERT INTO liked_post (user_id, post_id)
+
+INSERT INTO liked_post ("userId", "postId")
 VALUES (5, 4);
 
-INSERT INTO liked_post (user_id, post_id)
+INSERT INTO liked_post ("userId", "postId")
 VALUES (1, 4);
 
-INSERT INTO liked_post (user_id, post_id)
-VALUES (6, 7);
-
-INSERT INTO liked_post (user_id, post_id)
+INSERT INTO liked_post ("userId", "postId")
 VALUES (2, 9);
 
-INSERT INTO liked_post (user_id, post_id)
-VALUES (6, 10);
-
-INSERT INTO liked_post (user_id, post_id)
+INSERT INTO liked_post ("userId", "postId")
 VALUES (1, 9);
 
-INSERT INTO liked_post (user_id, post_id)
+INSERT INTO liked_post ("userId", "postId")
 VALUES (4, 4);
 
-INSERT INTO liked_post (user_id, post_id)
+INSERT INTO liked_post ("userId", "postId")
 VALUES (2, 10);
 
-INSERT INTO liked_post (user_id, post_id)
+INSERT INTO liked_post ("userId", "postId")
 VALUES (1, 12);
 
-INSERT INTO liked_post (user_id, post_id)
+INSERT INTO liked_post ("userId", "postId")
 VALUES (4, 12);
 
-INSERT INTO liked_post (user_id, post_id)
-VALUES (6, 12);
-
-INSERT INTO liked_post (user_id, post_id)
+INSERT INTO liked_post ("userId", "postId")
 VALUES (3, 12);
 
-INSERT INTO liked_post (user_id, post_id)
+INSERT INTO liked_post ("userId", "postId")
 VALUES (3, 9);
 
-INSERT INTO liked_post (user_id, post_id)
-VALUES (6, 14);
+INSERT INTO liked_post ("userId", "postId")
+VALUES (2, 13);
 
-INSERT INTO liked_post (user_id, post_id)
-VALUES (2, 15);
+INSERT INTO liked_post ("userId", "postId")
+VALUES (5, 12);
 
-INSERT INTO liked_post (user_id, post_id)
-VALUES (5, 16);
-
-INSERT INTO liked_post (user_id, post_id)
-VALUES (1, 17);
+INSERT INTO liked_post ("userId", "postId")
+VALUES (1, 8);
 
