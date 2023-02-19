@@ -3,6 +3,7 @@ CREATE DATABASE twitter_clone;
 CREATE TABLE app_user(
     "userId" SERIAL PRIMARY KEY,
     "displayName" VARCHAR(100),
+    "auth0Id" VARCHAR(100),
     "userName" VARCHAR(100) NOT NULL,
     "email" VARCHAR(100) NOT NULL UNIQUE,
     "birthDate" DATE,
@@ -86,20 +87,20 @@ CREATE TABLE follow(
 
 
 /*Inserting User*/
-INSERT INTO app_user ( "displayName", "userName", "email", "joinedDate", "birthDate")
-VALUES ( 'John Doe', 'JohnDoe','johndoe@gmail.com', '2023-01-08', '1999-01-08');
+INSERT INTO app_user ( "displayName", "userName", "auth0Id", "email", "joinedDate", "birthDate")
+VALUES ( 'John Doe', 'JohnDoe','auth|0f05fq5098g238', 'johndoe@gmail.com', '2023-01-08', '1999-01-08');
 
-INSERT INTO app_user ( "displayName", "userName", "email", "joinedDate", "birthDate")
-VALUES ( 'Michael Stewart', 'MStew','tracey.bond@gmail.com', '2022-05-18', '1980-05-22');
+INSERT INTO app_user ( "displayName", "userName","auth0Id", "email", "joinedDate", "birthDate")
+VALUES ( 'Michael Stewart', 'MStew','auth|dfg5245568g8jq','tracey.bond@gmail.com', '2022-05-18', '1980-05-22');
 
-INSERT INTO app_user ( "displayName", "userName", "email", "joinedDate", "birthDate")
-VALUES ( 'Benjamin Davidson', 'BenDavid123','benjamin.davidson@gmail.com', '2023-02-04', '2001-10-02');
+INSERT INTO app_user ( "displayName", "userName","auth0Id", "email", "joinedDate", "birthDate")
+VALUES ( 'Benjamin Davidson', 'BenDavid123','auth|2gtunqa3113fvn','benjamin.davidson@gmail.com', '2023-02-04', '2001-10-02');
 
-INSERT INTO app_user ( "displayName", "userName", "email", "joinedDate", "birthDate")
-VALUES ( 'Alan Paterson', 'APaterson','alan.paterson@gmail.com', '2022-02-28', '2004-11-29');
+INSERT INTO app_user ( "displayName", "userName","auth0Id", "email", "joinedDate", "birthDate")
+VALUES ( 'Alan Paterson', 'APaterson','auth|gjnca35769davn','alan.paterson@gmail.com', '2022-02-28', '2004-11-29');
 
-INSERT INTO app_user ( "displayName", "userName", "email", "joinedDate")
-VALUES ( 'Joe Anderson', 'Anderson', 'joe.anderson@gmail.com', '2021-03-08');
+INSERT INTO app_user ( "displayName", "userName","auth0Id", "email", "joinedDate")
+VALUES ( 'Joe Anderson', 'Anderson', 'auth|sdq315gb2cavcac','joe.anderson@gmail.com', '2021-03-08');
 
 
 /*Inserting Messages*/
