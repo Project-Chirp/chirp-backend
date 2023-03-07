@@ -1,3 +1,6 @@
+const express = require("express");
+const appUserRoute = require("./routes/appUsersRoutes");
+const appPostRoute = require("./routes/postRoutes");
 // Modules
 const axios = require("axios");
 const appUserRoute = require("./Routes/appUsersRoutes");
@@ -34,6 +37,7 @@ app.use((error, req, res, next) => {
 });
 
 app.use("/api/appUsers", appUserRoute);
+app.use("/api/posts", appPostRoute);
 
 app.get("/public", (req, res) => {
   console.log(req);
