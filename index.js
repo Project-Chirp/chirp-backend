@@ -24,7 +24,7 @@ const verifyJwt = jwt({
 const currentUserCheck = async (req, res, next) => {
   const auth0Id = req.auth.sub;
   const query = await pool.query(
-    `SELECT * from app_user WHERE "auth0Id" = $1`,
+    `SELECT * FROM app_user WHERE "auth0Id" = $1`,
     [auth0Id]
   );
   const user = query.rows;
@@ -58,7 +58,7 @@ require("dotenv").config();
 app.use(express.json());
 app.use(cors());
 
-app.use("/api/appUsers", appUserRoute);
+app.use("/api/appUsers", verifyJwt, currentUserCheck, appUserRoute);
 app.use("/api/posts", appPostRoute);
 
 app.get("/public", (req, res) => {

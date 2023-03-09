@@ -36,8 +36,24 @@ const addUser = (req, res) => {
   });
 };
 
+const getBasicUserInfo = async (req, res) => {
+  const auth0Id = req.auth.sub;
+  console.log("HELLO");
+  const query = await pool.query(
+    `SELECT "userId",
+    "username",
+    "displayName"
+    FROM app_user WHERE "auth0Id" = $1`,
+    [auth0Id]
+  );
+  const user = query.rows[0];
+  console.log(user);
+  res.send(user);
+};
+
 module.exports = {
   getAppUsers,
+  getBasicUserInfo,
   getUserById,
   addUser,
 };
