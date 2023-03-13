@@ -48,6 +48,7 @@ const getBasicUserInfo = async (req, res) => {
   );
   const user = query.rows[0];
   console.log(user);
+  user.isLoading = false;
   res.send(user);
 };
 
