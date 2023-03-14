@@ -28,7 +28,7 @@ const currentUserCheck = async (req, res, next) => {
     [auth0Id]
   );
   const user = query.rows;
-  if (!user) {
+  if (user.length == 0) {
     try {
       const accessToken = req.headers.authorization.split(" ")[1];
       const response = await axios.get(

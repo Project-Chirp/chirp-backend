@@ -38,7 +38,6 @@ const addUser = (req, res) => {
 
 const getBasicUserInfo = async (req, res) => {
   const auth0Id = req.auth.sub;
-  console.log("HELLO");
   const query = await pool.query(
     `SELECT "userId",
     "username",
@@ -47,7 +46,6 @@ const getBasicUserInfo = async (req, res) => {
     [auth0Id]
   );
   const user = query.rows[0];
-  console.log(user);
   user.isLoading = false;
   res.send(user);
 };
