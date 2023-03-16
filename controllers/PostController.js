@@ -10,12 +10,12 @@ const getPosts = (req, res) => {
 
 const addPost = async (req, res) => {
   try {
-    const { text_content } = req.body;
-    const now = new Date();
+    const { userId, textContent } = req.body;
+    const timestamp = new Date();
     pool.query(postQueries.addPost, [
-      1,
-      now,
-      text_content,
+      userId,
+      timestamp,
+      textContent,
       false,
       false,
       false,
