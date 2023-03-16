@@ -51,7 +51,6 @@ const getBasicUserInfo = async (req, res) => {
 };
 
 const addBasicUserInfo = async (req, res) => {
-  console.log(req.auth.sub);
   const auth0Id = req.auth.sub;
   const { username, displayName, birthDate } = req.body;
   const query = await pool.query(
@@ -62,8 +61,7 @@ const addBasicUserInfo = async (req, res) => {
      WHERE "auth0Id" = $4`,
     [username, displayName, birthDate, auth0Id]
   );
-  console.log(query);
-  res.send("Hey");
+  res.send("Updated user info");
 };
 
 module.exports = {
