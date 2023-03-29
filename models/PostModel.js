@@ -7,7 +7,7 @@ const getAllPosts = `SELECT u.username,
 
 const getAllPosts2 = `WITH post_likes AS (
   SELECT "postId", 
-	COUNT(*) AS "numberOfLikes"
+	COUNT(*)::INT AS "numberOfLikes"
   FROM liked_post
   GROUP BY "postId"
   )

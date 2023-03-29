@@ -20,6 +20,7 @@ const likePost = async (req, res) => {
       `INSERT INTO liked_post ("userId", "postId") VALUES ($1, $2)`,
       [userId, postId]
     );
+    res.sendStatus(200);
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
@@ -34,6 +35,7 @@ const unlikePost = async (req, res) => {
       `DELETE FROM liked_post WHERE "userId" = $1 AND "postId" = $2`,
       [userId, postId]
     );
+    res.sendStatus(200);
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
