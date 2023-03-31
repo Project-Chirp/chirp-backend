@@ -58,10 +58,10 @@ const addBasicUserInfo = async (req, res) => {
      SET "username" = $1,
      "displayName" = $2,
      "birthDate" = $3
-     WHERE "auth0Id" = $4`,
+     WHERE "auth0Id" = $4 RETURNING "userId", "displayName", "username"`,
     [username, displayName, birthDate, auth0Id]
   );
-  res.send("Updated user info");
+  res.send({ ...query.rows[0], isLoading: false });
 };
 
 module.exports = {
