@@ -7,12 +7,15 @@ const getUserInfo = async (req, res) => {
   const user = query.rows[0];
   user.isLoading = false;
   res.send(user);
-  console.log(user);
 };
 
 const updateUserInfo = async (req, res) => {
   const { userId } = req.params;
-  const { username, displayName, birthDate } = req.body;
+  const { username, birthDate } = req.body;
+  let { displayName } = req.body;
+  if (!displayName) {
+    displayName = username;
+  }
   const query = await pool.query(userQueries.updateUserInfo, [
     username,
     displayName,
