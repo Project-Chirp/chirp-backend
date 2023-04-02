@@ -5,7 +5,7 @@ const addPost = async (req, res) => {
   try {
     const { userId, textContent } = req.body;
     const timestamp = new Date();
-    pool.query(postQueries.addPost, [
+    const query = await pool.query(postQueries.addPost, [
       userId,
       timestamp,
       textContent,
@@ -13,7 +13,8 @@ const addPost = async (req, res) => {
       false,
       false,
     ]);
-    res.status(201).send("Post added");
+    // TODO: Find a way to return the entire post object rather than appending missing attributes in the frontend
+    res.status(201).send(query.rows[0]);
   } catch (err) {
     console.log(err);
   }
