@@ -6,8 +6,8 @@ const { expressjwt: jwt } = require("express-jwt");
 const jwks = require("jwks-rsa");
 
 const pool = require("./database/db");
-const appUserRoute = require("./Routes/appUsersRoutes");
-const appPostRoute = require("./routes/postRoutes");
+const userRoute = require("./routes/userRoutes");
+const postRoute = require("./routes/postRoutes");
 
 const verifyJwt = jwt({
   secret: jwks.expressJwtSecret({
@@ -58,15 +58,7 @@ require("dotenv").config();
 app.use(express.json());
 app.use(cors());
 
-app.use("/api/appUsers", verifyJwt, currentUserCheck, appUserRoute);
-app.use("/api/posts", appPostRoute);
-
-app.get("/public", (req, res) => {
-  res.send("Hello World!");
-});
-
-app.get("/protected", verifyJwt, currentUserCheck, async (req, res) => {
-  res.send("Hello from protected route!");
-});
+app.use("/api/users", verifyJwt, currentUserCheck, userRoute);
+app.use("/api/posts", postRoute);
 
 app.listen(port, () => console.log(`Listening on port ${port}....`));
