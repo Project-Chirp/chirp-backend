@@ -1,11 +1,11 @@
 const { Router } = require("express");
 
-const appPostController = require("../Controllers/postController");
+const postController = require("../controllers/postController");
 
 const router = Router();
 
-router.get("/", appPostController.getPosts);
-router.post("/", appPostController.addPost);
+router.get("/", postController.getPosts);
+router.post("/", postController.addPost);
 router.post("/likePost", appPostController.likePost);
 router.delete("/unlikePost", appPostController.unlikePost);
 
