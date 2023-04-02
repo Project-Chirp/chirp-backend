@@ -6,7 +6,7 @@ const router = Router();
 
 router.get("/", postController.getPosts);
 router.post("/", postController.addPost);
-router.post("/likePost", appPostController.likePost);
-router.delete("/unlikePost", appPostController.unlikePost);
+router.post("/likePost", postController.likePost);
+router.delete("/unlikePost", postController.unlikePost);
 
 module.exports = router;

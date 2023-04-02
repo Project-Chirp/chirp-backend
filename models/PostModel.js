@@ -1,11 +1,6 @@
-const getAllPosts = `SELECT u.username,
-   u."displayName",
-   p."textContent",
-   p.timestamp
-   FROM post AS p
-   INNER JOIN app_user AS u ON p."userId" = u."userId"`;
+const addPost = `INSERT INTO post ("userId", timestamp, "textContent", "isRepost", "isQuotePost", "isReply") VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`;
 
-const getAllPosts2 = `WITH post_likes AS (
+const getAllPosts = `WITH post_likes AS (
   SELECT "postId", 
 	COUNT(*)::INT AS "numberOfLikes"
   FROM liked_post
@@ -22,10 +17,13 @@ const getAllPosts2 = `WITH post_likes AS (
    LEFT JOIN post_likes AS l ON p."postId" = l."postId"
    INNER JOIN app_user AS u ON p."userId" = u."userId"`;
 
-const addPost = `INSERT INTO post ("userId", timestamp, "textContent", "isRepost", "isQuotePost", "isReply") VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`;
+const likePost = `INSERT INTO liked_post ("userId", "postId") VALUES ($1, $2)`;
+
+const unlikePost = `DELETE FROM liked_post WHERE "userId" = $1 AND "postId" = $2`;
 
 module.exports = {
   addPost,
   getAllPosts,
-  getAllPosts2,
+  likePost,
+  unlikePost,
 };
