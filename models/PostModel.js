@@ -1,3 +1,4 @@
+
 const addPost = `INSERT INTO post ("userId", timestamp, "textContent", "isRepost", "isQuotePost", "isReply") VALUES ($1, $2, $3, $4, $5, $6)
 RETURNING "postId", "textContent", timestamp`;
 
