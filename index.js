@@ -1,6 +1,7 @@
 const express = require("express");
 const appUserRoute = require("./routes/appUsersRoutes");
 const appPostRoute = require("./routes/postRoutes");
+const messagesRoute = require("./routes/messagesRoutes");
 
 const cors = require("cors");
 const app = express();
@@ -16,3 +17,4 @@ app.get("/", (req, res) => {
 
 app.use("/api/appUsers", appUserRoute);
 app.use("/api/posts", appPostRoute);
+app.use("/api/messages", messagesRoute);
