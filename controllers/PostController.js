@@ -1,5 +1,5 @@
 const pool = require("../database/db");
-const postQueries = require("../Models/PostModel");
+const postQueries = require("../models/PostModel");
 
 const addPost = async (req, res) => {
   try {
@@ -53,9 +53,16 @@ const unlikePost = async (req, res) => {
   }
 };
 
+const getUserTweets = async (req, res) => {
+  console.log(req.query);
+  const { userId } = req.query;
+  const query = await pool.query(postQueries.getUserPosts, [userId]);
+  res.send(query.rows[0]);
+};
 module.exports = {
   addPost,
   getPosts,
   likePost,
   unlikePost,
+  getUserTweets,
 };

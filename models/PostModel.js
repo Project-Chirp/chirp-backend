@@ -22,9 +22,20 @@ const likePost = `INSERT INTO liked_post ("userId", "postId") VALUES ($1, $2)`;
 
 const unlikePost = `DELETE FROM liked_post WHERE "userId" = $1 AND "postId" = $2`;
 
+const getUserPosts = `SELECT app_user."displayName", 
+post."postId", 
+post."textContent", 
+post."timestamp", 
+app_user."username" 
+FROM post 
+JOIN app_user ON app_user."userId" = post."userId"
+JOIN liked_post ON liked_post."userId" = post."userId"
+WHERE post."userId" = 3`;
+
 module.exports = {
   addPost,
   getAllPosts,
   likePost,
   unlikePost,
+  getUserPosts,
 };
