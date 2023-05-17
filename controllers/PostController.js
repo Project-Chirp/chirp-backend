@@ -31,6 +31,28 @@ const getPosts = async (req, res) => {
   }
 };
 
+const getReplies = async (req, res) => {
+  try {
+    const { userId, postId } = req.query;
+    const query = await pool.query(postQueries.getReplies, [userId, postId]);
+    res.send(query.rows);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
+const getPost = async (req, res) => {
+  try {
+    const { userId, postId } = req.query;
+    const query = await pool.query(postQueries.getPost, [userId, postId]);
+    res.send(query.rows[0]);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
 const likePost = async (req, res) => {
   try {
     const { postId, userId } = req.body;
@@ -58,4 +80,6 @@ module.exports = {
   getPosts,
   likePost,
   unlikePost,
+  getPost,
+  getReplies,
 };
