@@ -1,6 +1,9 @@
 const addPost = `INSERT INTO post ("userId", timestamp, "textContent", "isRepost", "isQuotePost", "isReply") VALUES ($1, $2, $3, $4, $5, $6)
 RETURNING "postId", "textContent", timestamp`;
 
+const addReply = `INSERT INTO post ("userId", "parentPostId", timestamp, "textContent", "isRepost", "isQuotePost", "isReply") VALUES ($1, $2, $3, $4, $5, $6, $7)
+RETURNING "postId", "textContent", timestamp`;
+
 const getAllPosts = `WITH post_likes AS (
   SELECT "postId", 
 	COUNT(*)::INT AS "numberOfLikes"
@@ -65,4 +68,5 @@ module.exports = {
   unlikePost,
   getPost,
   getReplies,
+  addReply,
 };

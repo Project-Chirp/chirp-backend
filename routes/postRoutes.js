@@ -10,5 +10,6 @@ router.post("/likePost", postController.likePost);
 router.delete("/unlikePost", postController.unlikePost);
 router.get("/fetchPost", postController.getPost);
 router.get("/fetchReplies", postController.getReplies);
+router.post("/postReply", postController.addReply);
 
 module.exports = router;

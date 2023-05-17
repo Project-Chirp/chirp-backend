@@ -1,5 +1,5 @@
 const pool = require("../database/db");
-const postQueries = require("../Models/PostModel");
+const postQueries = require("../models/PostModel");
 
 const addPost = async (req, res) => {
   try {
@@ -12,6 +12,26 @@ const addPost = async (req, res) => {
       false,
       false,
       false,
+    ]);
+    // TODO: Find a way to return the entire post object rather than appending missing attributes in the frontend
+    res.status(201).send(query.rows[0]);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const addReply = async (req, res) => {
+  try {
+    const { userId, parentPostId, textContent } = req.body;
+    const timestamp = new Date();
+    const query = await pool.query(postQueries.addReply, [
+      userId,
+      parentPostId,
+      timestamp,
+      textContent,
+      false,
+      false,
+      true,
     ]);
     // TODO: Find a way to return the entire post object rather than appending missing attributes in the frontend
     res.status(201).send(query.rows[0]);
@@ -82,4 +102,5 @@ module.exports = {
   unlikePost,
   getPost,
   getReplies,
+  addReply,
 };
