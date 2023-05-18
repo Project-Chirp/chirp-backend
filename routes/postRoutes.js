@@ -8,6 +8,6 @@ router.get("/", postController.getPosts);
 router.post("/", postController.addPost);
 router.post("/likePost", postController.likePost);
 router.delete("/unlikePost", postController.unlikePost);
-router.get("/getOwnPosts", postController.getUserTweets);
+router.get("/getOwnTweets", postController.getOwnTweets);
 
 module.exports = router;

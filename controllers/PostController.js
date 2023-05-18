@@ -53,16 +53,20 @@ const unlikePost = async (req, res) => {
   }
 };
 
-const getUserTweets = async (req, res) => {
-  console.log(req.query);
-  const { userId } = req.query;
-  const query = await pool.query(postQueries.getUserPosts, [userId]);
-  res.send(query.rows[0]);
+const getOwnTweets = async (req, res) => {
+  try {
+    const { userId } = req.query;
+    const query = await pool.query(postQueries.getOwnTweets, [userId]);
+    res.send(query.rows);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
 };
 module.exports = {
   addPost,
   getPosts,
   likePost,
   unlikePost,
-  getUserTweets,
+  getOwnTweets,
 };
