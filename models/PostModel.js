@@ -38,16 +38,43 @@ const getOwnTweets = `WITH post_likes AS (
    FROM post AS p
    LEFT JOIN post_likes AS l ON p."postId" = l."postId"
    INNER JOIN app_user AS u ON p."userId" = u."userId"
-   WHERE u."userId" = $1`;
-// `SELECT app_user."displayName",
-// post."postId",
-// post."textContent",
-// post."timestamp",
-// app_user."username"
-// FROM post
-// JOIN app_user ON app_user."userId" = post."userId"
-// JOIN liked_post ON liked_post."userId" = post."userId"
-// WHERE post."userId" = 3`;
+   WHERE u."userId" = $1 AND p."isReply" = 'false'`;
+
+const getOwnReplies = `WITH post_likes AS (
+  SELECT "postId", 
+	COUNT(*)::INT AS "numberOfLikes"
+  FROM liked_post
+  GROUP BY "postId"
+  )
+  SELECT p."postId",
+   u.username,
+   u."displayName",
+   p."textContent",
+   p.timestamp,
+   EXISTS(SELECT 1 FROM liked_post li WHERE li."userId" = $1 AND li."postId" = p."postId" LIMIT 1) AS "isLikedByCurrentUser",
+   COALESCE(l."numberOfLikes",0) AS "numberOfLikes"
+   FROM post AS p
+   LEFT JOIN post_likes AS l ON p."postId" = l."postId"
+   INNER JOIN app_user AS u ON p."userId" = u."userId"
+   WHERE u."userId" = $1 AND p."isReply" = 'true'`;
+
+const getOwnLikes = `WITH post_likes AS (
+  SELECT "postId", 
+	COUNT(*)::INT AS "numberOfLikes"
+  FROM liked_post
+  GROUP BY "postId"
+  )
+  SELECT p."postId",
+   u.username,
+   u."displayName",
+   p."textContent",
+   p.timestamp,
+   EXISTS(SELECT 1 FROM liked_post li WHERE li."userId" = $1 AND li."postId" = p."postId" LIMIT 1) AS "isLikedByCurrentUser",
+   COALESCE(l."numberOfLikes",0) AS "numberOfLikes"
+   FROM post AS p
+   LEFT JOIN post_likes AS l ON p."postId" = l."postId"
+   INNER JOIN app_user AS u ON p."userId" = u."userId"
+   WHERE u."userId" = $1 AND p."isReply" = 'false'`;
 
 module.exports = {
   addPost,
@@ -55,4 +82,6 @@ module.exports = {
   likePost,
   unlikePost,
   getOwnTweets,
+  getOwnReplies,
+  getOwnLikes,
 };

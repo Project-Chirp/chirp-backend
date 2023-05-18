@@ -63,10 +63,34 @@ const getOwnTweets = async (req, res) => {
     res.status(500).send(error);
   }
 };
+
+const getOwnReplies = async (req, res) => {
+  try {
+    const { userId } = req.query;
+    const query = await pool.query(postQueries.getOwnReplies, [userId]);
+    res.send(query.rows);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
+const getOwnLikes = async (req, res) => {
+  try {
+    const { userId } = req.query;
+    const query = await pool.query(postQueries.getOwnLikes, [userId]);
+    res.send(query.rows);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
 module.exports = {
   addPost,
   getPosts,
   likePost,
   unlikePost,
   getOwnTweets,
+  getOwnReplies,
+  getOwnLikes,
 };
