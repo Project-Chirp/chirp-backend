@@ -11,5 +11,6 @@ router.delete("/unlikePost", postController.unlikePost);
 router.get("/getOwnTweets", postController.getOwnTweets);
 router.get("/getOwnReplies", postController.getOwnReplies);
 router.get("/getOwnLikes", postController.getOwnLikes);
+router.get("/getTweetCount", postController.getTweetCount);
 
 module.exports = router;

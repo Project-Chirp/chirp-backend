@@ -79,6 +79,8 @@ INNER JOIN app_user AS u ON p."userId" = u."userId"
 AND EXISTS(SELECT 1 FROM liked_post li WHERE li."userId" = $1 AND li."postId" = p."postId" LIMIT 1)
 ORDER BY p.timestamp DESC;`;
 
+const getTweetCount = `SELECT COUNT(*) FROM post AS p WHERE p."userId" = $1`;
+
 // Can remove the first exists and keep the 2nd and it works... why? Query works but like button is bugged, shows its unliked. If you have both exists it works though..?
 // Timestamp descending/ascending. Should it be done?
 module.exports = {
@@ -89,4 +91,5 @@ module.exports = {
   getOwnTweets,
   getOwnReplies,
   getOwnLikes,
+  getTweetCount,
 };
