@@ -95,6 +95,17 @@ const getTweetCount = async (req, res) => {
     res.status(500).send(error);
   }
 };
+
+const getBio = async (req, res) => {
+  try {
+    const { userId } = req.query;
+    const query = await pool.query(postQueries.getBio, [userId]);
+    res.send(query.rows[0].Bio);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
 module.exports = {
   addPost,
   getPosts,
@@ -104,4 +115,5 @@ module.exports = {
   getOwnReplies,
   getOwnLikes,
   getTweetCount,
+  getBio,
 };

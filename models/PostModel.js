@@ -81,6 +81,9 @@ ORDER BY p.timestamp DESC;`;
 
 const getTweetCount = `SELECT COUNT(*) FROM post AS p WHERE p."userId" = $1`;
 
+const getBio = `SELECT a."Bio"
+FROM app_user AS a
+WHERE a."userId" = $1;`;
 // Can remove the first exists and keep the 2nd and it works... why? Query works but like button is bugged, shows its unliked. If you have both exists it works though..?
 // Timestamp descending/ascending. Should it be done?
 module.exports = {
@@ -92,4 +95,5 @@ module.exports = {
   getOwnReplies,
   getOwnLikes,
   getTweetCount,
+  getBio,
 };
