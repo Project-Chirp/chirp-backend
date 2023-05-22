@@ -15,8 +15,8 @@ const addPost = async (req, res) => {
     ]);
     // TODO: Find a way to return the entire post object rather than appending missing attributes in the frontend
     res.status(201).send(query.rows[0]);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
   }
 };
 
