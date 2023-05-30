@@ -33,37 +33,17 @@ const getOwnLikes = async (req, res) => {
     res.status(500).send(error);
   }
 };
-const getTweetCount = async (req, res) => {
-  try {
-    const { userId } = req.query;
-    const query = await pool.query(profileQueries.getTweetCount, [userId]);
-    res.send(query.rows[0].count);
-  } catch (error) {
-    console.log(error);
-    res.status(500).send(error);
-  }
-};
 
-const getBio = async (req, res) => {
+const getProfileContents = async (req, res) => {
   try {
     const { userId } = req.query;
-    const query = await pool.query(profileQueries.getBio, [userId]);
-    res.send(query.rows[0].Bio);
-  } catch (error) {
-    console.log(error);
-    res.status(500).send(error);
-  }
-};
-
-const getJoinDate = async (req, res) => {
-  try {
-    const { userId } = req.query;
-    const query = await pool.query(profileQueries.getJoinDate, [userId]);
-    const date = new Date(query.rows[0].joinedDate);
+    const query = await pool.query(profileQueries.getProfileContents, [userId]);
+    const date = new Date(query.rows[0].joindate);
     const month = date.toLocaleString("default", { month: "long" });
     const year = date.getFullYear();
     const formattedDate = `${month} ${year}`;
-    res.send(formattedDate);
+    query.rows[0].joindate = formattedDate;
+    res.send(query.rows[0]);
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
@@ -74,7 +54,5 @@ module.exports = {
   getOwnTweets,
   getOwnReplies,
   getOwnLikes,
-  getTweetCount,
-  getBio,
-  getJoinDate,
+  getProfileContents,
 };
