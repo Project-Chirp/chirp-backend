@@ -19,7 +19,8 @@ const getAllPosts = `WITH post_likes AS (
    COALESCE(l."numberOfLikes",0) AS "numberOfLikes"
    FROM post AS p
    LEFT JOIN post_likes AS l ON p."postId" = l."postId"
-   INNER JOIN app_user AS u ON p."userId" = u."userId"`;
+   INNER JOIN app_user AS u ON p."userId" = u."userId"
+   ORDER BY p.timestamp DESC`;
 
 const getPost = `WITH post_likes AS (
   SELECT "postId", 
@@ -55,7 +56,8 @@ const getReplies = `WITH post_likes AS (
    FROM post AS p
    LEFT JOIN post_likes AS l ON p."postId" = l."postId"
    INNER JOIN app_user AS u ON p."userId" = u."userId"
-   WHERE p."parentPostId" = $2 AND p."isReply" = 'true'`;
+   WHERE p."parentPostId" = $2 AND p."isReply" = 'true'
+   ORDER BY p.timestamp DESC`;
 
 const likePost = `INSERT INTO liked_post ("userId", "postId") VALUES ($1, $2)`;
 
