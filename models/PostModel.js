@@ -20,6 +20,7 @@ const getAllPosts = `WITH post_likes AS (
    FROM post AS p
    LEFT JOIN post_likes AS l ON p."postId" = l."postId"
    INNER JOIN app_user AS u ON p."userId" = u."userId"
+   WHERE p."parentPostId" IS NULL
    ORDER BY p.timestamp DESC`;
 
 const getPost = `WITH post_likes AS (
