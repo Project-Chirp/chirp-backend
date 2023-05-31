@@ -56,13 +56,11 @@ AND EXISTS(SELECT 1 FROM liked_post li WHERE li."userId" = $1 AND li."postId" = 
 ORDER BY p.timestamp DESC;`;
 
 const getProfileContents = `SELECT 
-(SELECT COUNT(*) FROM post WHERE "userId" = $1) AS tweetCount,
-a."bio" AS bio,
-a."joinedDate" AS joinDate
-FROM 
-app_user AS a
-WHERE 
-a."userId" = $1;`;
+  (SELECT COUNT(*) FROM post WHERE "userId" = $1) AS tweetCount,
+  a."bio" AS bio,
+  a."joinedDate" AS joinDate
+  FROM app_user AS a
+  WHERE a."userId" = $1;`;
 
 module.exports = {
   getOwnTweets,
