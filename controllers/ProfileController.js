@@ -38,11 +38,6 @@ const getProfileContents = async (req, res) => {
   try {
     const { userId } = req.query;
     const query = await pool.query(profileQueries.getProfileContents, [userId]);
-    const date = new Date(query.rows[0].joindate);
-    const month = date.toLocaleString("default", { month: "long" });
-    const year = date.getFullYear();
-    const formattedDate = `${month} ${year}`;
-    query.rows[0].joindate = formattedDate;
     res.send(query.rows[0]);
   } catch (error) {
     console.log(error);

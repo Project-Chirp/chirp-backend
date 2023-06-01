@@ -47,22 +47,20 @@ SELECT p."postId",
   u."displayName",
   p."textContent",
   p.timestamp,
-  EXISTS(SELECT 1 FROM liked_post li WHERE li."userId" = $1 AND li."postId" = p."postId" LIMIT 1) AS "isLikedByCurrentUser",
+  true AS "isLikedByCurrentUser",
   COALESCE(l."numberOfLikes", 0) AS "numberOfLikes"
 FROM post AS p
 LEFT JOIN post_likes AS l ON p."postId" = l."postId"
 INNER JOIN app_user AS u ON p."userId" = u."userId"
 AND EXISTS(SELECT 1 FROM liked_post li WHERE li."userId" = $1 AND li."postId" = p."postId" LIMIT 1)
-ORDER BY p.timestamp DESC;`;
+ORDER BY p.timestamp DESC`;
 
 const getProfileContents = `SELECT 
-(SELECT COUNT(*) FROM post WHERE "userId" = $1) AS tweetCount,
-a."bio" AS bio,
-a."joinedDate" AS joinDate
-FROM 
-app_user AS a
-WHERE 
-a."userId" = $1;`;
+(SELECT COUNT(*) FROM post WHERE "userId" = $1) AS "postCount",
+a."bio",
+a."joinedDate"
+FROM app_user AS a
+WHERE a."userId" = $1`;
 
 module.exports = {
   getOwnTweets,
