@@ -8,6 +8,7 @@ const getLatestMessages = async (req, res) => {
     res.send(query.rows);
   } catch (error) {
     console.log(error);
+    res.status(500).send(error);
   }
 };
 
