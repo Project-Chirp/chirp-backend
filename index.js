@@ -8,7 +8,9 @@ const jwks = require("jwks-rsa");
 const pool = require("./database/db");
 const userRoute = require("./routes/userRoutes");
 const postRoute = require("./routes/postRoutes");
+const profileRoute = require("./routes/profileRoutes");
 const messagesRoute = require("./routes/messagesRoutes");
+
 
 const verifyJwt = jwt({
   secret: jwks.expressJwtSecret({
@@ -61,6 +63,7 @@ app.use(cors());
 
 app.use("/api/users", verifyJwt, currentUserCheck, userRoute);
 app.use("/api/posts", postRoute);
+app.use("/api/profile", profileRoute);
 app.use("/api/messages", messagesRoute);
 
 app.listen(port, () => console.log(`Listening on port ${port}....`));
