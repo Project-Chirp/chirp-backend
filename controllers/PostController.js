@@ -15,8 +15,30 @@ const addPost = async (req, res) => {
     ]);
     // TODO: Find a way to return the entire post object rather than appending missing attributes in the frontend
     res.status(201).send(query.rows[0]);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
+const addReply = async (req, res) => {
+  try {
+    const { userId, parentPostId, textContent } = req.body;
+    const timestamp = new Date();
+    const query = await pool.query(postQueries.addReply, [
+      userId,
+      parentPostId,
+      timestamp,
+      textContent,
+      false,
+      false,
+      true,
+    ]);
+    // TODO: Find a way to return the entire post object rather than appending missing attributes in the frontend
+    res.status(201).send(query.rows[0]);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
   }
 };
 
@@ -25,6 +47,28 @@ const getPosts = async (req, res) => {
     const { userId } = req.query;
     const query = await pool.query(postQueries.getAllPosts, [userId]);
     res.send(query.rows);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
+const getReplies = async (req, res) => {
+  try {
+    const { userId, postId } = req.query;
+    const query = await pool.query(postQueries.getReplies, [userId, postId]);
+    res.send(query.rows);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
+const getPost = async (req, res) => {
+  try {
+    const { userId, postId } = req.query;
+    const query = await pool.query(postQueries.getPost, [userId, postId]);
+    res.send(query.rows[0]);
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
@@ -58,4 +102,7 @@ module.exports = {
   getPosts,
   likePost,
   unlikePost,
+  getPost,
+  getReplies,
+  addReply,
 };
