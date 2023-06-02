@@ -56,9 +56,9 @@ AND EXISTS(SELECT 1 FROM liked_post li WHERE li."userId" = $1 AND li."postId" = 
 ORDER BY p.timestamp DESC`;
 
 const getProfileContents = `SELECT 
-(SELECT COUNT(*) FROM post WHERE "userId" = $1) AS "postCount",
-a."bio",
-a."joinedDate"
+  (SELECT COUNT(*) FROM post WHERE "userId" = $1) AS "postCount",
+  a."bio",
+  a."joinedDate"
 FROM app_user AS a
 WHERE a."userId" = $1`;
 
