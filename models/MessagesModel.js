@@ -22,7 +22,13 @@ FROM
 JOIN app_user u ON s.otherUserId = u."userId"
 ORDER BY otherUserId, timestamp DESC;`;
 
+const getFollowedList = `SELECT u."userId", u."displayName", u."username"
+FROM app_user u
+JOIN follow f ON u."userId" = f."followedUserId"
+WHERE f."followerUserId" = $1 AND f."followStatus" = true;`;
+
 module.exports = {
   getLatestMessages,
   getDMList,
+  getFollowedList,
 };
