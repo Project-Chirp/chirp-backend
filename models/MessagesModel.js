@@ -1,3 +1,6 @@
+const addMessage = `INSERT INTO message (timestamp, "textContent", "sentUserId", "receivedUserId") VALUES ($1, $2, $3, $4)
+  RETURNING *;`;
+
 const getDirectMessage = `SELECT * FROM message
   WHERE "sentUserId" in ($1, $2) AND "receivedUserId" in ($1, $2)
   ORDER BY timestamp`;
@@ -17,6 +20,7 @@ const getLatestMessages = `SELECT DISTINCT ON("otherUserId")
   ORDER BY "otherUserId", timestamp DESC;`;
 
 module.exports = {
+  addMessage,
   getDirectMessage,
   getLatestMessages,
 };
