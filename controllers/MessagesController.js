@@ -21,11 +21,12 @@ const addMessage = async (req, res) => {
 const getDirectMessage = async (req, res) => {
   try {
     const { userId1, userId2 } = req.params;
-    const query = await pool.query(messageQueries.getDirectMessage, [
+    const messageQuery = await pool.query(messageQueries.getDirectMessage, [
       userId1,
       userId2,
     ]);
-    res.send(query.rows);
+    const userQuery = await pool.query(messageQueries.getOtherUser, [userId2]);
+    res.send({ messages: messageQuery.rows, otherUser: userQuery.rows[0] });
   } catch (error) {
     console.log(error);
     res.status(500).send(error);

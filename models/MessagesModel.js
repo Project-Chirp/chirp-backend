@@ -19,8 +19,15 @@ const getLatestMessages = `SELECT DISTINCT ON("otherUserId")
   JOIN app_user u ON s."otherUserId" = u."userId"
   ORDER BY "otherUserId", timestamp DESC;`;
 
+const getOtherUser = `SELECT
+  username,
+  "displayName"
+  FROM app_user
+  WHERE "userId" = $1`;
+
 module.exports = {
   addMessage,
   getDirectMessage,
   getLatestMessages,
+  getOtherUser,
 };
