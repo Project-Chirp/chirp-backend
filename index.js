@@ -11,7 +11,6 @@ const postRoute = require("./routes/postRoutes");
 const profileRoute = require("./routes/profileRoutes");
 const messagesRoute = require("./routes/messagesRoutes");
 
-
 const verifyJwt = jwt({
   secret: jwks.expressJwtSecret({
     cache: true,

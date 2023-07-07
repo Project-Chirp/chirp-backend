@@ -4,8 +4,10 @@ const messagesController = require("../controllers/MessagesController");
 
 const router = Router();
 
-router.get("/", messagesController.getLatestMessages);
-router.get("/dmList", messagesController.getDMList);
+router.get("/", messagesController.getConversationList);
+router.get("/getModalConversations", messagesController.getModalConversations);
 router.get("/followedList", messagesController.getFollowedList);
+router.get("/:userId1/:userId2", messagesController.getDirectMessage);
+router.post("/", messagesController.addMessage);
 
 module.exports = router;
