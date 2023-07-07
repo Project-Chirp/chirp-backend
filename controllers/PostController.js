@@ -11,7 +11,6 @@ const addPost = async (req, res) => {
       textContent,
       false,
       false,
-      false,
     ]);
     // TODO: Find a way to return the entire post object rather than appending missing attributes in the frontend
     res.status(201).send(query.rows[0]);
@@ -32,7 +31,6 @@ const addReply = async (req, res) => {
       textContent,
       false,
       false,
-      true,
     ]);
     // TODO: Find a way to return the entire post object rather than appending missing attributes in the frontend
     res.status(201).send(query.rows[0]);
