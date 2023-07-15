@@ -1,8 +1,8 @@
 const addPost = `INSERT INTO post ("userId", timestamp, "textContent", "isRepost", "isQuotePost") VALUES ($1, $2, $3, $4, $5)
-RETURNING "postId", "textContent", timestamp`;
+RETURNING "postId", "textContent", timestamp, "isRepost", "isQuotePost"`;
 
 const addReply = `INSERT INTO post ("userId", "parentPostId", timestamp, "textContent", "isRepost", "isQuotePost") VALUES ($1, $2, $3, $4, $5, $6)
-RETURNING "postId", "textContent", timestamp, "parentPostId"`;
+RETURNING "postId", "parentPostId", "textContent", timestamp, "isRepost", "isQuotePost"`;
 
 const getAllPosts = `WITH post_likes AS (
   SELECT "postId", 
