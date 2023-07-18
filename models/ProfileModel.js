@@ -14,7 +14,7 @@ const getOwnTweets = `WITH post_likes AS (
      FROM post AS p
      LEFT JOIN post_likes AS l ON p."postId" = l."postId"
      INNER JOIN app_user AS u ON p."userId" = u."userId"
-     WHERE u."userId" = $1 AND p."isReply" = 'false'
+     WHERE u."userId" = $1 AND p."parentPostId" IS NULL
      ORDER BY p.timestamp DESC`;
 
 const getOwnReplies = `WITH post_likes AS (
@@ -33,7 +33,7 @@ const getOwnReplies = `WITH post_likes AS (
    FROM post AS p
    LEFT JOIN post_likes AS l ON p."postId" = l."postId"
    INNER JOIN app_user AS u ON p."userId" = u."userId"
-   WHERE u."userId" = $1 AND p."isReply" = 'true'
+   WHERE u."userId" = $1 AND p."parentPostId" IS NOT NULL
    ORDER BY p.timestamp DESC`;
 
 const getOwnLikes = `WITH post_likes AS (
