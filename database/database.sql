@@ -46,7 +46,8 @@ CREATE TABLE post(
     "timestamp" TIMESTAMPTZ NOT NULL,
     "textContent" TEXT,
     "isRepost" BOOLEAN NOT NULL,
-    "isQuotePost" BOOLEAN NOT NULL, BOOLEAN NOT NULL
+    "isQuotePost" BOOLEAN NOT NULL,
+    "isReply" BOOLEAN NOT NULL
 );
 
 CREATE TABLE post_media(
@@ -128,50 +129,50 @@ VALUES ('2022-12-27 21:32:22.027653-07', 'Same here', 2, 1);
 
 
 /*Inserting Post*/
-INSERT INTO post ("userId", "timestamp", "textContent", "isRepost", "isQuotePost")
-VALUES (1,'2022-12-25 10:40:36.024285-07', 'Merry Christmas', false, false);
+INSERT INTO post ("userId", "timestamp", "textContent", "isRepost", "isQuotePost", "isReply")
+VALUES (1,'2022-12-25 10:40:36.024285-07', 'Merry Christmas', false, false, false);
 
-INSERT INTO post ("userId", "parentPostId", "timestamp", "textContent", "isRepost", "isQuotePost")
-VALUES (2, 1, '2022-12-25 10:45:34.024632-07', 'Merry Christmas to you too', false, false);
+INSERT INTO post ("userId", "parentPostId", "timestamp", "textContent", "isRepost", "isQuotePost", "isReply")
+VALUES (2, 1, '2022-12-25 10:45:34.024632-07', 'Merry Christmas to you too', false, false, true);
 
-INSERT INTO post ("userId", "parentPostId", "timestamp", "textContent", "isRepost", "isQuotePost")
-VALUES (3, 1, '2022-12-25 11:01:22.022342-07', 'Thanks John. You too.', false, false);
+INSERT INTO post ("userId", "parentPostId", "timestamp", "textContent", "isRepost", "isQuotePost", "isReply")
+VALUES (3, 1, '2022-12-25 11:01:22.022342-07', 'Thanks John. You too.', false, false, true);
 
-INSERT INTO post ("userId", "parentPostId", "timestamp", "isRepost", "isQuotePost")
-VALUES (5, 3, '2022-12-30 17:04:45.022242-07', true, false);
+INSERT INTO post ("userId", "parentPostId", "timestamp", "isRepost", "isQuotePost", "isReply")
+VALUES (5, 3, '2022-12-30 17:04:45.022242-07', true, false, false);
 
-INSERT INTO post ("userId", "parentPostId", "timestamp", "isRepost", "isQuotePost")
-VALUES (1, 4, '2022-12-30 17:10:35.027442-07', true, false);
+INSERT INTO post ("userId", "parentPostId", "timestamp", "isRepost", "isQuotePost", "isReply")
+VALUES (1, 4, '2022-12-30 17:10:35.027442-07', true, false, false);
 
-INSERT INTO post ("userId", "parentPostId", "timestamp", "textContent", "isRepost", "isQuotePost")
-VALUES (1, 4, '2022-12-30 17:30:37.024452-07', 'I got some pretty good sales from there too, would recommend', false, true);
+INSERT INTO post ("userId", "parentPostId", "timestamp", "textContent", "isRepost", "isQuotePost", "isReply")
+VALUES (1, 4, '2022-12-30 17:30:37.024452-07', 'I got some pretty good sales from there too, would recommend', false, true, false);
 
-INSERT INTO post ("userId", "parentPostId", "timestamp", "textContent", "isRepost", "isQuotePost")
-VALUES (2, 4, '2022-12-30 17:37:42.024834-07', 'What did you get?', false, false);
+INSERT INTO post ("userId", "parentPostId", "timestamp", "textContent", "isRepost", "isQuotePost", "isReply")
+VALUES (2, 4, '2022-12-30 17:37:42.024834-07', 'What did you get?', false, false, true);
 
-INSERT INTO post ("userId", "parentPostId", "timestamp", "textContent", "isRepost", "isQuotePost")
-VALUES (2, 7, '2022-12-30 17:42:32.024848-07', 'Mario kart is awesome, you will have so much fun', false, false);
+INSERT INTO post ("userId", "parentPostId", "timestamp", "textContent", "isRepost", "isQuotePost", "isReply")
+VALUES (2, 7, '2022-12-30 17:42:32.024848-07', 'Mario kart is awesome, you will have so much fun', false, false, true);
 
-INSERT INTO post ("userId", "parentPostId", "timestamp", "isRepost", "isQuotePost")
-VALUES (4, 8, '2022-12-30 17:50:12.024428-07', true, false);
+INSERT INTO post ("userId", "parentPostId", "timestamp", "isRepost", "isQuotePost", "isReply")
+VALUES (4, 8, '2022-12-30 17:50:12.024428-07', true, false, false);
 
-INSERT INTO post ("userId", "timestamp", "textContent", "isRepost", "isQuotePost")
-VALUES (3,'2022-12-31 14:22:26.027885-07', 'New Years party is gonna be a blast', false, false);
+INSERT INTO post ("userId", "timestamp", "textContent", "isRepost", "isQuotePost", "isReply")
+VALUES (3,'2022-12-31 14:22:26.027885-07', 'New Years party is gonna be a blast', false, false, false);
 
-INSERT INTO post ("userId", "parentPostId", "timestamp", "textContent", "isRepost", "isQuotePost")
-VALUES (3, 10, '2022-12-31 14:30:22.024956-07', 'So excited for this', false, false);
+INSERT INTO post ("userId", "parentPostId", "timestamp", "textContent", "isRepost", "isQuotePost", "isReply")
+VALUES (3, 10, '2022-12-31 14:30:22.024956-07', 'So excited for this', false, false, true);
 
-INSERT INTO post ("userId", "parentPostId", "timestamp", "textContent", "isRepost", "isQuotePost")
-VALUES (3, 9, '2022-12-31 14:36:32.028546-07', 'I love these games', false, false);
+INSERT INTO post ("userId", "parentPostId", "timestamp", "textContent", "isRepost", "isQuotePost", "isReply")
+VALUES (3, 9, '2022-12-31 14:36:32.028546-07', 'I love these games', false, false, true);
 
-INSERT INTO post ("userId", "timestamp", "textContent", "isRepost", "isQuotePost")
-VALUES (5,'2022-12-31 17:46:43.028646-07', 'Hockey is the best sport of all time!', false, false);
+INSERT INTO post ("userId", "timestamp", "textContent", "isRepost", "isQuotePost", "isReply")
+VALUES (5,'2022-12-31 17:46:43.028646-07', 'Hockey is the best sport of all time!', false, false, false);
 
-INSERT INTO post ("userId", "parentPostId", "timestamp", "textContent", "isRepost", "isQuotePost")
-VALUES (2, 8, '2022-12-31 17:55:33.028634-07', 'Based take', false, true);
+INSERT INTO post ("userId", "parentPostId", "timestamp", "textContent", "isRepost", "isQuotePost", "isReply")
+VALUES (2, 8, '2022-12-31 17:55:33.028634-07', 'Based take', false, true, false);
 
-INSERT INTO post ("userId", "parentPostId", "timestamp", "textContent", "isRepost", "isQuotePost")
-VALUES (3, 8, '2022-12-31 17:59:46.028434-07', 'Cant agree with you on this one', false, false);
+INSERT INTO post ("userId", "parentPostId", "timestamp", "textContent", "isRepost", "isQuotePost", "isReply")
+VALUES (3, 8, '2022-12-31 17:59:46.028434-07', 'Cant agree with you on this one', false, false, true);
 
 /*Inserting Follow*/
 INSERT INTO follow ("followerUserId", "followedUserId", "followedDate", "followStatus")
