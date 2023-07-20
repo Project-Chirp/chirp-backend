@@ -54,7 +54,7 @@ const getModalConversations = async (req, res) => {
     ]);
     const filteredQuery = query.rows.map(
       ({ otherUserId, displayName, username }) => ({
-        otherUserId,
+        userId: otherUserId,
         displayName,
         username,
       })

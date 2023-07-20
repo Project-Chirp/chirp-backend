@@ -25,7 +25,7 @@ const getOtherUser = `SELECT
   FROM app_user
   WHERE "userId" = $1`;
 
-const getFollowedList = `SELECT u."userId" AS "otherUserId", u."displayName", u."username"
+const getFollowedList = `SELECT u."userId", u."displayName", u."username"
 FROM app_user u
 JOIN follow f ON u."userId" = f."followedUserId"
 WHERE f."followerUserId" = $1 AND f."followStatus" = true;`;
