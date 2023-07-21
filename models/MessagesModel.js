@@ -5,7 +5,7 @@ const getDirectMessage = `SELECT * FROM message
   WHERE "sentUserId" in ($1, $2) AND "receivedUserId" in ($1, $2)
   ORDER BY timestamp`;
 
-const getLatestMessages = `SELECT DISTINCT ON("otherUserId")
+const getConversationList = `SELECT DISTINCT ON("otherUserId")
   "displayName",
   username,
   "textContent",
@@ -25,9 +25,15 @@ const getOtherUser = `SELECT
   FROM app_user
   WHERE "userId" = $1`;
 
+const getFollowedList = `SELECT u."userId", u."displayName", u."username"
+FROM app_user u
+JOIN follow f ON u."userId" = f."followedUserId"
+WHERE f."followerUserId" = $1 AND f."followStatus" = true;`;
+
 module.exports = {
   addMessage,
   getDirectMessage,
-  getLatestMessages,
+  getConversationList,
+  getFollowedList,
   getOtherUser,
 };

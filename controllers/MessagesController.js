@@ -33,10 +33,43 @@ const getDirectMessage = async (req, res) => {
   }
 };
 
-const getLatestMessages = async (req, res) => {
+const getConversationList = async (req, res) => {
   try {
     const { userId } = req.query;
-    const query = await pool.query(messageQueries.getLatestMessages, [userId]);
+    const query = await pool.query(messageQueries.getConversationList, [
+      userId,
+    ]);
+    res.send(query.rows);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
+const getModalConversations = async (req, res) => {
+  try {
+    const { userId } = req.query;
+    const query = await pool.query(messageQueries.getConversationList, [
+      userId,
+    ]);
+    const filteredQuery = query.rows.map(
+      ({ otherUserId, displayName, username }) => ({
+        userId: otherUserId,
+        displayName,
+        username,
+      })
+    );
+    res.send(filteredQuery);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
+const getFollowedList = async (req, res) => {
+  try {
+    const { userId } = req.query;
+    const query = await pool.query(messageQueries.getFollowedList, [userId]);
     res.send(query.rows);
   } catch (error) {
     console.log(error);
@@ -47,5 +80,7 @@ const getLatestMessages = async (req, res) => {
 module.exports = {
   addMessage,
   getDirectMessage,
-  getLatestMessages,
+  getConversationList,
+  getModalConversations,
+  getFollowedList,
 };
