@@ -69,7 +69,6 @@ const getModalConversations = async (req, res) => {
 const getFollowedList = async (req, res) => {
   try {
     const { userId } = req.query;
-
     const query = await pool.query(messageQueries.getFollowedList, [userId]);
     res.send(query.rows);
   } catch (error) {
