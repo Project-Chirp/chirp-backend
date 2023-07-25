@@ -59,8 +59,9 @@ require("dotenv").config();
 
 app.use(express.json());
 app.use(cors());
-
-app.use("/api/users", verifyJwt, currentUserCheck, userRoute);
+app.use(verifyJwt);
+app.use(currentUserCheck);
+app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);
 app.use("/api/profile", profileRoute);
 app.use("/api/messages", messagesRoute);
