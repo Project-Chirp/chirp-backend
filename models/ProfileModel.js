@@ -1,4 +1,4 @@
-const getOwnTweets = `WITH post_likes AS (
+const getUserPosts = `WITH post_likes AS (
   SELECT "postId", 
     COUNT(*)::INT AS "numberOfLikes"
   FROM liked_post
@@ -29,7 +29,7 @@ const getOwnTweets = `WITH post_likes AS (
   WHERE u.username = $1 AND p."parentPostId" IS NULL
   ORDER BY p.timestamp DESC`;
 
-const getOwnReplies = `WITH post_likes AS (
+const getUserReplies = `WITH post_likes AS (
   SELECT "postId", 
 	COUNT(*)::INT AS "numberOfLikes"
   FROM liked_post
@@ -60,7 +60,7 @@ const getOwnReplies = `WITH post_likes AS (
   WHERE u.username = $1 AND p."parentPostId" IS NOT NULL
   ORDER BY p.timestamp DESC`;
 
-const getOwnLikes = `WITH post_likes AS (
+const getUserLikes = `WITH post_likes AS (
   SELECT "postId", 
     COUNT(*)::INT AS "numberOfLikes"
   FROM liked_post
@@ -104,8 +104,8 @@ FROM app_user AS a
 WHERE a."username" = $1`;
 
 module.exports = {
-  getOwnTweets,
-  getOwnReplies,
-  getOwnLikes,
+  getUserPosts,
+  getUserReplies,
+  getUserLikes,
   getProfileContents,
 };
