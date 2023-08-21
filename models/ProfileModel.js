@@ -75,7 +75,7 @@ const getUserLikes = `WITH post_likes AS (
 	GROUP BY "parentPostId"
   )
   SELECT p."postId",
-    u."userId",
+  	u."userId",
     u."displayName",
     u.username,
     p."textContent",
@@ -88,8 +88,8 @@ const getUserLikes = `WITH post_likes AS (
   LEFT JOIN post_likes AS l ON p."postId" = l."postId"
   LEFT JOIN post_replies_reposts AS r ON p."postId" = r."parentPostId"
   INNER JOIN app_user AS u ON p."userId" = u."userId"
-  AND EXISTS(SELECT 1 FROM liked_post li WHERE li."userId" = u."userId" AND li."postId" = p."postId" LIMIT 1)
-  WHERE u.username = $1
+  AND EXISTS(SELECT 1 FROM liked_post li INNER JOIN app_user au ON li."userId" = au."userId"
+  WHERE au.username = $1 AND li."postId" = p."postId" LIMIT 1)
   ORDER BY p.timestamp DESC`;
 
 const getProfileContents = `SELECT 
