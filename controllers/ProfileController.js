@@ -26,7 +26,6 @@ const getUserReplies = async (req, res) => {
 const getUserLikes = async (req, res) => {
   try {
     const { username } = req.query;
-
     const query = await pool.query(profileQueries.getUserLikes, [username]);
     res.send(query.rows);
   } catch (error) {
