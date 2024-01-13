@@ -3,8 +3,8 @@ const profileQueries = require("../models/ProfileModel");
 
 const getUserPosts = async (req, res) => {
   try {
-    const { userId } = req.query;
-    const query = await pool.query(profileQueries.getUserPosts, [userId]);
+    const { username } = req.query;
+    const query = await pool.query(profileQueries.getUserPosts, [username]);
     res.send(query.rows);
   } catch (error) {
     console.log(error);
@@ -14,8 +14,8 @@ const getUserPosts = async (req, res) => {
 
 const getUserReplies = async (req, res) => {
   try {
-    const { userId } = req.query;
-    const query = await pool.query(profileQueries.getUserReplies, [userId]);
+    const { username } = req.query;
+    const query = await pool.query(profileQueries.getUserReplies, [username]);
     res.send(query.rows);
   } catch (error) {
     console.log(error);
@@ -25,8 +25,8 @@ const getUserReplies = async (req, res) => {
 
 const getUserLikes = async (req, res) => {
   try {
-    const { userId } = req.query;
-    const query = await pool.query(profileQueries.getUserLikes, [userId]);
+    const { username } = req.query;
+    const query = await pool.query(profileQueries.getUserLikes, [username]);
     res.send(query.rows);
   } catch (error) {
     console.log(error);
@@ -36,8 +36,10 @@ const getUserLikes = async (req, res) => {
 
 const getProfileContents = async (req, res) => {
   try {
-    const { userId } = req.query;
-    const query = await pool.query(profileQueries.getProfileContents, [userId]);
+    const { username } = req.query;
+    const query = await pool.query(profileQueries.getProfileContents, [
+      username,
+    ]);
     res.send(query.rows[0]);
   } catch (error) {
     console.log(error);
