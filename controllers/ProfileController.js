@@ -1,10 +1,10 @@
 const pool = require("../database/db");
 const profileQueries = require("../models/ProfileModel");
 
-const getOwnTweets = async (req, res) => {
+const getUserPosts = async (req, res) => {
   try {
-    const { userId } = req.query;
-    const query = await pool.query(profileQueries.getOwnTweets, [userId]);
+    const { username } = req.query;
+    const query = await pool.query(profileQueries.getUserPosts, [username]);
     res.send(query.rows);
   } catch (error) {
     console.log(error);
@@ -12,10 +12,10 @@ const getOwnTweets = async (req, res) => {
   }
 };
 
-const getOwnReplies = async (req, res) => {
+const getUserReplies = async (req, res) => {
   try {
-    const { userId } = req.query;
-    const query = await pool.query(profileQueries.getOwnReplies, [userId]);
+    const { username } = req.query;
+    const query = await pool.query(profileQueries.getUserReplies, [username]);
     res.send(query.rows);
   } catch (error) {
     console.log(error);
@@ -23,10 +23,10 @@ const getOwnReplies = async (req, res) => {
   }
 };
 
-const getOwnLikes = async (req, res) => {
+const getUserLikes = async (req, res) => {
   try {
-    const { userId } = req.query;
-    const query = await pool.query(profileQueries.getOwnLikes, [userId]);
+    const { username } = req.query;
+    const query = await pool.query(profileQueries.getUserLikes, [username]);
     res.send(query.rows);
   } catch (error) {
     console.log(error);
@@ -36,8 +36,10 @@ const getOwnLikes = async (req, res) => {
 
 const getProfileContents = async (req, res) => {
   try {
-    const { userId } = req.query;
-    const query = await pool.query(profileQueries.getProfileContents, [userId]);
+    const { username } = req.query;
+    const query = await pool.query(profileQueries.getProfileContents, [
+      username,
+    ]);
     res.send(query.rows[0]);
   } catch (error) {
     console.log(error);
@@ -46,8 +48,8 @@ const getProfileContents = async (req, res) => {
 };
 
 module.exports = {
-  getOwnTweets,
-  getOwnReplies,
-  getOwnLikes,
+  getUserPosts,
+  getUserReplies,
+  getUserLikes,
   getProfileContents,
 };
