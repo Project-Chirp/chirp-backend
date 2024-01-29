@@ -1,78 +1,104 @@
-const getUserPosts = `WITH post_likes AS (
-  SELECT "postId", 
-    COUNT(*)::INT AS "numberOfLikes"
-  FROM liked_post
-  GROUP BY "postId"
+const getUserPosts = `
+  WITH post_likes AS (
+    SELECT "postId", 
+      COUNT(*)::INT AS "numberOfLikes"
+    FROM liked_post
+    GROUP BY "postId"
   ),
   post_replies_reposts AS (
   	SELECT "parentPostId",
-	  COUNT(*)::INT AS "numberOfReplies",
-	  COUNT(CASE WHEN "isRepost" = TRUE THEN 1 END) AS "numberOfReposts"
-	FROM post
-	WHERE "parentPostId" IS NOT NULL
-	GROUP BY "parentPostId"
+	    COUNT(*)::INT AS "numberOfReplies",
+	    COUNT(CASE WHEN "isRepost" = TRUE THEN 1 END) AS "numberOfReposts"
+	  FROM post
+	  WHERE "parentPostId" IS NOT NULL
+	  GROUP BY "parentPostId"
   )
-  SELECT p."postId",
+  SELECT 
+    p."postId",
     u.username,
     u."displayName",
     p."textContent",
     p.timestamp,
-    EXISTS(SELECT 1 FROM liked_post li WHERE li."userId" = u."userId" AND li."postId" = p."postId" LIMIT 1) AS "isLikedByCurrentUser",
+    EXISTS(
+      SELECT 1 
+      FROM liked_post li 
+      WHERE li."userId" = u."userId" 
+      AND li."postId" = p."postId" 
+      LIMIT 1
+    ) AS "isLikedByCurrentUser",
     COALESCE(l."numberOfLikes",0) AS "numberOfLikes",
     COALESCE(r."numberOfReplies", 0) AS "numberOfReplies",
     COALESCE(r."numberOfReposts", 0) AS "numberOfReposts"
-  FROM post AS p
-  LEFT JOIN post_likes AS l ON p."postId" = l."postId"
-  LEFT JOIN post_replies_reposts AS r ON p."postId" = r."parentPostId"
-  INNER JOIN app_user AS u ON p."userId" = u."userId"
-  WHERE u."username" = $1 AND p."parentPostId" IS NULL
-  ORDER BY p.timestamp DESC`;
+  FROM 
+    post AS p
+    LEFT JOIN post_likes AS l ON p."postId" = l."postId"
+    LEFT JOIN post_replies_reposts AS r ON p."postId" = r."parentPostId"
+    INNER JOIN app_user AS u ON p."userId" = u."userId"
+  WHERE 
+    u."username" = $1 
+    AND p."parentPostId" IS NULL
+  ORDER BY 
+    p.timestamp DESC`;
 
-const getUserReplies = `WITH post_likes AS (
-  SELECT "postId", 
-	COUNT(*)::INT AS "numberOfLikes"
-  FROM liked_post
-  GROUP BY "postId"
+const getUserReplies = `
+  WITH post_likes AS (
+    SELECT "postId", 
+      COUNT(*)::INT AS "numberOfLikes"
+    FROM liked_post
+    GROUP BY "postId"
   ),
   post_replies_reposts AS (
   	SELECT "parentPostId",
-	  COUNT(*)::INT AS "numberOfReplies",
-	  COUNT(CASE WHEN "isRepost" = TRUE THEN 1 END) AS "numberOfReposts"
-	FROM post
-	WHERE "parentPostId" IS NOT NULL
-	GROUP BY "parentPostId"
+      COUNT(*)::INT AS "numberOfReplies",
+      COUNT(CASE WHEN "isRepost" = TRUE THEN 1 END) AS "numberOfReposts"
+    FROM post
+    WHERE "parentPostId" IS NOT NULL
+    GROUP BY "parentPostId"
   )
-  SELECT p."postId",
+  SELECT 
+    p."postId",
     u.username,
     u."displayName",
     p."textContent",
     p.timestamp,
-    EXISTS(SELECT 1 FROM liked_post li WHERE li."userId" = u."userId" AND li."postId" = p."postId" LIMIT 1) AS "isLikedByCurrentUser",
+    EXISTS(
+      SELECT 1 
+      FROM liked_post li 
+      WHERE li."userId" = u."userId" 
+      AND li."postId" = p."postId" 
+      LIMIT 1
+    ) AS "isLikedByCurrentUser",
     COALESCE(l."numberOfLikes",0) AS "numberOfLikes",
     COALESCE(r."numberOfReplies", 0) AS "numberOfReplies",
     COALESCE(r."numberOfReposts", 0) AS "numberOfReposts"
-  FROM post AS p
-  LEFT JOIN post_likes AS l ON p."postId" = l."postId"
-  LEFT JOIN post_replies_reposts AS r ON p."postId" = r."parentPostId"
-  INNER JOIN app_user AS u ON p."userId" = u."userId"
-  WHERE u."username" = $1 AND p."parentPostId" IS NOT NULL
-  ORDER BY p.timestamp DESC`;
+  FROM 
+    post AS p
+    LEFT JOIN post_likes AS l ON p."postId" = l."postId"
+    LEFT JOIN post_replies_reposts AS r ON p."postId" = r."parentPostId"
+    INNER JOIN app_user AS u ON p."userId" = u."userId"
+  WHERE 
+    u."username" = $1 
+    AND p."parentPostId" IS NOT NULL
+  ORDER BY 
+    p.timestamp DESC`;
 
-const getUserLikes = `WITH post_likes AS (
-  SELECT "postId", 
-    COUNT(*)::INT AS "numberOfLikes"
-  FROM liked_post
-  GROUP BY "postId"
+const getUserLikes = `
+  WITH post_likes AS (
+    SELECT "postId", 
+      COUNT(*)::INT AS "numberOfLikes"
+    FROM liked_post
+    GROUP BY "postId"
   ),
   post_replies_reposts AS (
   	SELECT "parentPostId",
-	  COUNT(*)::INT AS "numberOfReplies",
-	  COUNT(CASE WHEN "isRepost" = TRUE THEN 1 END) AS "numberOfReposts"
-	FROM post
-	WHERE "parentPostId" IS NOT NULL
-	GROUP BY "parentPostId"
+      COUNT(*)::INT AS "numberOfReplies",
+      COUNT(CASE WHEN "isRepost" = TRUE THEN 1 END) AS "numberOfReposts"
+    FROM post
+    WHERE "parentPostId" IS NOT NULL
+    GROUP BY "parentPostId"
   )
-  SELECT p."postId",
+  SELECT 
+    p."postId",
     u."username",
     u."displayName",
     p."textContent",
@@ -81,18 +107,19 @@ const getUserLikes = `WITH post_likes AS (
     COALESCE(l."numberOfLikes",0) AS "numberOfLikes",
     COALESCE(r."numberOfReplies", 0) AS "numberOfReplies",
     COALESCE(r."numberOfReposts", 0) AS "numberOfReposts"
-  FROM post AS p
-  INNER JOIN app_user AS u ON p."userId" = u."userId"
-  LEFT JOIN post_likes AS l ON p."postId" = l."postId"
-  LEFT JOIN post_replies_reposts AS r ON p."postId" = r."parentPostId"
+  FROM 
+    post AS p
+    INNER JOIN app_user AS u ON p."userId" = u."userId"
+    LEFT JOIN post_likes AS l ON p."postId" = l."postId"
+    LEFT JOIN post_replies_reposts AS r ON p."postId" = r."parentPostId"
   WHERE EXISTS (
-		SELECT 1
-		FROM liked_post li
-		INNER JOIN app_user u on li."userId" = u."userId"
-		WHERE u."username" = $1
-		AND li."postId" = p."postId"
-		LIMIT 1
-	)
+    SELECT 1
+    FROM liked_post li
+    INNER JOIN app_user u on li."userId" = u."userId"
+    WHERE u."username" = $1
+    AND li."postId" = p."postId"
+    LIMIT 1
+  )
   ORDER BY p.timestamp DESC`;
 
 const getProfileContents = `SELECT 
