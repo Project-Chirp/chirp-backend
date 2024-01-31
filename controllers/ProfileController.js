@@ -36,8 +36,9 @@ const getUserLikes = async (req, res) => {
 
 const getProfileContents = async (req, res) => {
   try {
-    const { username } = req.query;
+    const { userId, username } = req.query;
     const query = await pool.query(profileQueries.getProfileContents, [
+      userId,
       username,
     ]);
     res.send(query.rows[0]);

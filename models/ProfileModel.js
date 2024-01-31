@@ -129,9 +129,11 @@ a."joinedDate",
 a."displayName",
 a."username",
 (SELECT COUNT(*) FROM follow WHERE "followedUserId" = a."userId" AND "followStatus" = TRUE ) AS "followerCount",
-(SELECT COUNT(*) FROM follow WHERE "followerUserId" = a."userId" AND "followStatus" = TRUE ) AS "followingCount"
+(SELECT COUNT(*) FROM follow WHERE "followerUserId" = a."userId" AND "followStatus" = TRUE ) AS "followingCount",
+f."followStatus" AS "followStatus"
 FROM app_user AS a
-WHERE a."username" = $1`;
+LEFT JOIN follow as f ON f."followerUserId" = $1 AND f."followedUserId" = a."userId"
+WHERE a."username" = $2`;
 
 const getFollowStatus = `SELECT 
 CASE 
