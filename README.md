@@ -1,3 +1,3 @@
-# Tweeter - Backend
+# Chirp - Backend
 
-Backend of Twitter clone
+Backend of Chirp

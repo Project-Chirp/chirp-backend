@@ -36,8 +36,51 @@ const getUserLikes = async (req, res) => {
 
 const getProfileContents = async (req, res) => {
   try {
-    const { username } = req.query;
+    const { userId, username } = req.query;
     const query = await pool.query(profileQueries.getProfileContents, [
+      userId,
+      username,
+    ]);
+    res.send(query.rows[0]);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
+const getFollowStatus = async (req, res) => {
+  try {
+    const { userId, username } = req.query;
+    const query = await pool.query(profileQueries.getFollowStatus, [
+      userId,
+      username,
+    ]);
+    res.send(query.rows[0]);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
+const followUser = async (req, res) => {
+  try {
+    const { userId, username } = req.body;
+    const query = await pool.query(profileQueries.followUser, [
+      userId,
+      username,
+    ]);
+    res.send(query.rows[0]);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
+const unfollowUser = async (req, res) => {
+  try {
+    const { userId, username } = req.body;
+    const query = await pool.query(profileQueries.unfollowUser, [
+      userId,
       username,
     ]);
     res.send(query.rows[0]);
@@ -52,4 +95,7 @@ module.exports = {
   getUserReplies,
   getUserLikes,
   getProfileContents,
+  getFollowStatus,
+  followUser,
+  unfollowUser,
 };
