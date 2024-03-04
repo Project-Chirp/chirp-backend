@@ -80,7 +80,9 @@ const getUserReplies = `
     u."username" = $1 
     AND p."parentPostId" IS NOT NULL
   ORDER BY 
-    p.timestamp DESC`;
+    p.timestamp DESC
+  OFFSET ($2 - 1) * 15
+  LIMIT 15`;
 
 const getUserLikes = `
   WITH post_likes AS (

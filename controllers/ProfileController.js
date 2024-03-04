@@ -14,8 +14,11 @@ const getUserPosts = async (req, res) => {
 
 const getUserReplies = async (req, res) => {
   try {
-    const { username } = req.query;
-    const query = await pool.query(profileQueries.getUserReplies, [username]);
+    const { username, pageNumber } = req.query;
+    const query = await pool.query(profileQueries.getUserReplies, [
+      username,
+      pageNumber,
+    ]);
     res.send(query.rows);
   } catch (error) {
     console.log(error);
