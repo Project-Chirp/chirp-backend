@@ -131,6 +131,7 @@ const getProfileContents = `
     a."joinedDate",
     a."displayName",
     a."username",
+    a."birthDate",
     (SELECT COUNT(*) FROM 
       follow WHERE "followedUserId" = a."userId"
     ) AS "followerCount",
