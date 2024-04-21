@@ -1,3 +1,8 @@
+const editProfile = `
+  UPDATE app_user
+  SET "displayName" = $1, "birthDate" = $2, "bio" = $3
+  WHERE "userId" = $4`;
+
 const getUserPosts = `
   WITH post_likes AS (
     SELECT "postId", 
@@ -142,6 +147,7 @@ const getProfileContents = `
   WHERE a."username" = $1`;
 
 module.exports = {
+  editProfile,
   getUserPosts,
   getUserReplies,
   getUserLikes,
