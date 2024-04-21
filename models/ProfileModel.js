@@ -1,7 +1,8 @@
 const editProfile = `
   UPDATE app_user
   SET "displayName" = $1, "birthDate" = $2, "bio" = $3
-  WHERE "userId" = $4`;
+  WHERE "userId" = $4
+  RETURNING "displayName", "birthDate", bio`;
 
 const getUserPosts = `
   WITH post_likes AS (
