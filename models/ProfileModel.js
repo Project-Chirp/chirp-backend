@@ -129,12 +129,16 @@ a."joinedDate",
 a."displayName",
 a."username",
 a."userId",
-(SELECT COUNT(*) FROM follow WHERE "followedUserId" = a."userId" AND "followStatus" = TRUE ) AS "followerCount",
-(SELECT COUNT(*) FROM follow WHERE "followerUserId" = a."userId" AND "followStatus" = TRUE ) AS "followingCount",
-f."followStatus" AS "followStatus"
-FROM app_user AS a
-LEFT JOIN follow as f ON f."followerUserId" = $1 AND f."followedUserId" = a."userId"
-WHERE a."username" = $2`;
+(SELECT COUNT(*) FROM follow WHERE "followedUserId" = a."userId") AS "followerCount",
+(SELECT COUNT(*) FROM follow WHERE "followerUserId" = a."userId") AS "followingCount",
+CASE
+    WHEN EXISTS (SELECT 1 FROM follow WHERE "followerUserId" = $1 AND "followedUserId" = a."userId") THEN TRUE
+    ELSE FALSE
+END AS "followStatus"
+FROM 
+app_user AS a
+WHERE 
+a."username" = $2;`;
 
 module.exports = {
   getUserPosts,
