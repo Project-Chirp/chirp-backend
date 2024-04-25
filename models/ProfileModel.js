@@ -128,6 +128,7 @@ a."bio",
 a."joinedDate",
 a."displayName",
 a."username",
+a."userId",
 (SELECT COUNT(*) FROM follow WHERE "followedUserId" = a."userId" AND "followStatus" = TRUE ) AS "followerCount",
 (SELECT COUNT(*) FROM follow WHERE "followerUserId" = a."userId" AND "followStatus" = TRUE ) AS "followingCount",
 f."followStatus" AS "followStatus"
