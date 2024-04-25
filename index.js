@@ -10,6 +10,7 @@ const userRoute = require("./routes/userRoutes");
 const postRoute = require("./routes/postRoutes");
 const profileRoute = require("./routes/profileRoutes");
 const messagesRoute = require("./routes/messagesRoutes");
+const followRoute = require("./routes/followRoutes");
 
 const verifyJwt = jwt({
   secret: jwks.expressJwtSecret({
@@ -64,5 +65,6 @@ app.use("/api/users", verifyJwt, currentUserCheck, userRoute);
 app.use("/api/posts", postRoute);
 app.use("/api/profile", profileRoute);
 app.use("/api/messages", messagesRoute);
+app.use("/api/follow/", followRoute);
 
 app.listen(port, () => console.log(`Listening on port ${port}....`));
