@@ -19,7 +19,14 @@ WHERE "followerUserId" = $1
 AND "followedUserId" = (SELECT "userId" FROM otherUser)
 RETURNING *`;
 
+const getFollowStatus = `SELECT 
+"followStatus"
+FROM follow
+WHERE "followerUserId" = $1
+AND "followedUserId" = (SELECT "userId" FROM app_user WHERE "username" = $2);`;
+
 module.exports = {
   followUser,
   unfollowUser,
+  getFollowStatus,
 };
