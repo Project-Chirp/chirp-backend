@@ -35,7 +35,7 @@ const getUserPosts = `
     LEFT JOIN post_replies_reposts AS r ON p."postId" = r."parentPostId"
     INNER JOIN app_user AS u ON p."userId" = u."userId"
   WHERE 
-    u."username" = $1 
+    u."userId" = $1 
     AND p."parentPostId" IS NULL
   ORDER BY 
     p.timestamp DESC`;
@@ -77,7 +77,7 @@ const getUserReplies = `
     LEFT JOIN post_replies_reposts AS r ON p."postId" = r."parentPostId"
     INNER JOIN app_user AS u ON p."userId" = u."userId"
   WHERE 
-    u."username" = $1 
+    u."userId" = $1 
     AND p."parentPostId" IS NOT NULL
   ORDER BY 
     p.timestamp DESC`;
@@ -116,7 +116,7 @@ const getUserLikes = `
     SELECT 1
     FROM liked_post li
     INNER JOIN app_user u on li."userId" = u."userId"
-    WHERE u."username" = $1
+    WHERE u."userId" = $1
     AND li."postId" = p."postId"
     LIMIT 1
   )

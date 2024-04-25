@@ -3,10 +3,10 @@ const followQueries = require("../models/FollowModel");
 
 const followUser = async (req, res) => {
   try {
-    const { currentUserId, visitedUsername } = req.body;
+    const { currentUserId, visitedUserId } = req.body;
     const query = await pool.query(followQueries.followUser, [
       currentUserId,
-      visitedUsername,
+      visitedUserId,
     ]);
     res.send(query.rows[0]);
   } catch (error) {
@@ -17,10 +17,10 @@ const followUser = async (req, res) => {
 
 const unfollowUser = async (req, res) => {
   try {
-    const { currentUserId, visitedUsername } = req.body;
+    const { currentUserId, visitedUserId } = req.body;
     const query = await pool.query(followQueries.unfollowUser, [
       currentUserId,
-      visitedUsername,
+      visitedUserId,
     ]);
     res.send(query.rows[0]);
   } catch (error) {
@@ -31,12 +31,12 @@ const unfollowUser = async (req, res) => {
 
 const getFollowStatus = async (req, res) => {
   try {
-    const { currentUserId, visitedUsername } = req.body;
-    if ((currentUserId || visitedUsername) === undefined)
-      throw new Error("currentUserId or visitedUsername is undefined");
+    const { currentUserId, visitedUserId } = req.body;
+    if ((currentUserId || visitedUserId) === undefined)
+      throw new Error("currentUserId or visitedUserId is undefined");
     const query = await pool.query(followQueries.getFollowStatus, [
       currentUserId,
-      visitedUsername,
+      visitedUserId,
     ]);
     res.send(query.rows[0]);
   } catch (error) {
