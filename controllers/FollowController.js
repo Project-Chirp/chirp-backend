@@ -32,8 +32,6 @@ const unfollowUser = async (req, res) => {
 const getFollowStatus = async (req, res) => {
   try {
     const { currentUserId, visitedUserId } = req.body;
-    if ((currentUserId || visitedUserId) === undefined)
-      throw new Error("currentUserId or visitedUserId is undefined");
     const query = await pool.query(followQueries.getFollowStatus, [
       currentUserId,
       visitedUserId,

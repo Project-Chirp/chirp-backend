@@ -3,8 +3,7 @@ SELECT $1, "userId", CURRENT_DATE, TRUE
 FROM app_user
 WHERE "userId" = $2
 ON CONFLICT ("followerUserId", "followedUserId")
-DO UPDATE SET "followStatus" = TRUE, "followedDate" = CURRENT_DATE
-RETURNING *;
+DO UPDATE SET "followStatus" = TRUE, "followedDate" = CURRENT_DATE;
 `;
 
 const unfollowUser = `WITH otherUser AS (
@@ -16,8 +15,7 @@ LIMIT 1
 UPDATE follow
 SET "followStatus" = FALSE
 WHERE "followerUserId" = $1
-AND "followedUserId" = (SELECT "userId" FROM otherUser)
-RETURNING *`;
+AND "followedUserId" = (SELECT "userId" FROM otherUser);`;
 
 const getFollowStatus = `SELECT 
 "followStatus"
