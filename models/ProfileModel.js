@@ -1,5 +1,4 @@
-const getUserPosts = `
-  WITH post_likes AS (
+const getUserPosts = `WITH post_likes AS (
     SELECT "postId", 
       COUNT(*)::INT AS "numberOfLikes"
     FROM liked_post
@@ -35,13 +34,12 @@ const getUserPosts = `
     LEFT JOIN post_replies_reposts AS r ON p."postId" = r."parentPostId"
     INNER JOIN app_user AS u ON p."userId" = u."userId"
   WHERE 
-    u."username" = $1 
+    u."userId" = $1 
     AND p."parentPostId" IS NULL
   ORDER BY 
     p.timestamp DESC`;
 
-const getUserReplies = `
-  WITH post_likes AS (
+const getUserReplies = `WITH post_likes AS (
     SELECT "postId", 
       COUNT(*)::INT AS "numberOfLikes"
     FROM liked_post
@@ -77,15 +75,14 @@ const getUserReplies = `
     LEFT JOIN post_replies_reposts AS r ON p."postId" = r."parentPostId"
     INNER JOIN app_user AS u ON p."userId" = u."userId"
   WHERE 
-    u."username" = $1 
+    u."userId" = $1 
     AND p."parentPostId" IS NOT NULL
   ORDER BY 
     p.timestamp DESC
   OFFSET ($2 - 1) * 5
   LIMIT 5`;
 
-const getUserLikes = `
-  WITH post_likes AS (
+const getUserLikes = `WITH post_likes AS (
     SELECT "postId", 
       COUNT(*)::INT AS "numberOfLikes"
     FROM liked_post
@@ -118,7 +115,7 @@ const getUserLikes = `
     SELECT 1
     FROM liked_post li
     INNER JOIN app_user u on li."userId" = u."userId"
-    WHERE u."username" = $1
+    WHERE u."userId" = $1
     AND li."postId" = p."postId"
     LIMIT 1
   )
@@ -130,52 +127,21 @@ a."bio",
 a."joinedDate",
 a."displayName",
 a."username",
-(SELECT COUNT(*) FROM follow WHERE "followedUserId" = a."userId" AND "followStatus" = TRUE ) AS "followerCount",
-(SELECT COUNT(*) FROM follow WHERE "followerUserId" = a."userId" AND "followStatus" = TRUE ) AS "followingCount",
-f."followStatus" AS "followStatus"
-FROM app_user AS a
-LEFT JOIN follow as f ON f."followerUserId" = $1 AND f."followedUserId" = a."userId"
-WHERE a."username" = $2`;
-
-const getFollowStatus = `SELECT 
-CASE 
-    WHEN EXISTS (
-        SELECT 1
-        FROM follow
-        WHERE "followerUserId" = $1
-          AND "followedUserId" = (SELECT "userId" FROM app_user WHERE "username" = $2)
-          AND "followStatus" = TRUE
-    ) THEN TRUE
+a."userId",
+(SELECT COUNT(*) FROM follow WHERE "followedUserId" = a."userId") AS "followerCount",
+(SELECT COUNT(*) FROM follow WHERE "followerUserId" = a."userId") AS "followingCount",
+CASE
+    WHEN EXISTS (SELECT 1 FROM follow WHERE "followerUserId" = $1 AND "followedUserId" = a."userId") THEN TRUE
     ELSE FALSE
-END AS "followStatus";`;
-
-const followUser = `INSERT INTO follow ("followerUserId", "followedUserId", "followedDate", "followStatus")
-SELECT $1, "userId", CURRENT_DATE, TRUE
-FROM app_user
-WHERE "username" = $2
-ON CONFLICT ("followerUserId", "followedUserId")
-DO UPDATE SET "followStatus" = TRUE, "followedDate" = CURRENT_DATE
-RETURNING *;
-`;
-
-const unfollowUser = `WITH otherUser AS (
-SELECT "userId"
-FROM app_user
-WHERE "username" = $2
-LIMIT 1
-)
-UPDATE follow
-SET "followStatus" = FALSE
-WHERE "followerUserId" = $1
-AND "followedUserId" = (SELECT "userId" FROM otherUser)
-RETURNING *`;
+END AS "followStatus"
+FROM 
+app_user AS a
+WHERE 
+a."username" = $2;`;
 
 module.exports = {
   getUserPosts,
   getUserReplies,
   getUserLikes,
   getProfileContents,
-  getFollowStatus,
-  followUser,
-  unfollowUser,
 };
