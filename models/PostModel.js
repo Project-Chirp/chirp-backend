@@ -146,7 +146,7 @@ const getReplies = `
     LEFT JOIN post_replies_reposts AS r ON p."postId" = r."parentPostId"
     INNER JOIN app_user AS u ON p."userId" = u."userId"
   WHERE p."parentPostId" = $2
-  ORDER BY "numberOfLikes" DESC`;
+  ORDER BY "numberOfLikes" DESC, "timestamp" DESC`;
 
 const likePost = `INSERT INTO liked_post ("userId", "postId") VALUES ($1, $2)`;
 
