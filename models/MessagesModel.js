@@ -51,8 +51,7 @@ const getFollowedList = `
   FROM app_user u
   JOIN follow f
     ON u."userId" = f."followedUserId"
-  WHERE f."followerUserId" = $1
-    AND f."followStatus" = true;
+  WHERE f."followerUserId" = $1;
 `;
 
 module.exports = {
