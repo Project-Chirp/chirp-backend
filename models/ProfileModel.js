@@ -37,7 +37,9 @@ const getUserPosts = `WITH post_likes AS (
     u."userId" = $1 
     AND p."parentPostId" IS NULL
   ORDER BY 
-    p.timestamp DESC`;
+    p.timestamp DESC
+  OFFSET ($2 - 1) * 10
+  LIMIT 10`;
 
 const getUserReplies = `WITH post_likes AS (
     SELECT "postId", 
@@ -79,8 +81,8 @@ const getUserReplies = `WITH post_likes AS (
     AND p."parentPostId" IS NOT NULL
   ORDER BY 
     p.timestamp DESC
-  OFFSET ($2 - 1) * 5
-  LIMIT 5`;
+  OFFSET ($2 - 1) * 10
+  LIMIT 10`;
 
 const getUserLikes = `WITH post_likes AS (
     SELECT "postId", 
@@ -119,7 +121,9 @@ const getUserLikes = `WITH post_likes AS (
     AND li."postId" = p."postId"
     LIMIT 1
   )
-  ORDER BY p.timestamp DESC`;
+  ORDER BY p.timestamp DESC
+  OFFSET ($2 - 1) * 10
+  LIMIT 10`;
 
 const getProfileContents = `SELECT 
 (SELECT COUNT(*) FROM post WHERE "userId" = a."userId") AS "postCount",

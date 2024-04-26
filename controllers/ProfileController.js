@@ -3,9 +3,10 @@ const profileQueries = require("../models/ProfileModel");
 
 const getUserPosts = async (req, res) => {
   try {
-    const { visitedUserId } = req.query;
+    const { visitedUserId, offset } = req.query;
     const query = await pool.query(profileQueries.getUserPosts, [
       visitedUserId,
+      offset,
     ]);
     res.send(query.rows);
   } catch (error) {
@@ -30,9 +31,10 @@ const getUserReplies = async (req, res) => {
 
 const getUserLikes = async (req, res) => {
   try {
-    const { visitedUserId } = req.query;
+    const { visitedUserId, offset } = req.query;
     const query = await pool.query(profileQueries.getUserLikes, [
       visitedUserId,
+      offset,
     ]);
     res.send(query.rows);
   } catch (error) {
