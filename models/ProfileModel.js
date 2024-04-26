@@ -1,5 +1,4 @@
-const getUserPosts = `
-  WITH post_likes AS (
+const getUserPosts = `WITH post_likes AS (
     SELECT "postId", 
       COUNT(*)::INT AS "numberOfLikes"
     FROM liked_post
@@ -40,8 +39,7 @@ const getUserPosts = `
   ORDER BY 
     p.timestamp DESC`;
 
-const getUserReplies = `
-  WITH post_likes AS (
+const getUserReplies = `WITH post_likes AS (
     SELECT "postId", 
       COUNT(*)::INT AS "numberOfLikes"
     FROM liked_post
@@ -82,8 +80,7 @@ const getUserReplies = `
   ORDER BY 
     p.timestamp DESC`;
 
-const getUserLikes = `
-  WITH post_likes AS (
+const getUserLikes = `WITH post_likes AS (
     SELECT "postId", 
       COUNT(*)::INT AS "numberOfLikes"
     FROM liked_post
