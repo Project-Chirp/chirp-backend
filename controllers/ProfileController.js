@@ -1,6 +1,22 @@
 const pool = require("../database/db");
 const profileQueries = require("../models/ProfileModel");
 
+const editProfile = async (req, res) => {
+  try {
+    const { displayName, birthDate, bio, userId } = req.body;
+    const query = await pool.query(profileQueries.editProfile, [
+      displayName,
+      birthDate,
+      bio,
+      userId,
+    ]);
+    res.send(query.rows[0]);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
 const getUserPosts = async (req, res) => {
   try {
     const { userId, offset } = req.query;
@@ -58,6 +74,7 @@ const getProfileContents = async (req, res) => {
 };
 
 module.exports = {
+  editProfile,
   getUserPosts,
   getUserReplies,
   getUserLikes,
