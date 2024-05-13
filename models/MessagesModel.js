@@ -36,9 +36,7 @@ const getConversationList = `
   ORDER BY 
     "otherUserId", 
     timestamp 
-  DESC
-  OFFSET ($2 - 1) * 10
-  LIMIT 10`;
+  DESC`;
 
 const getOtherUser = `
   SELECT

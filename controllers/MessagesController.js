@@ -47,10 +47,9 @@ const getDirectMessage = async (req, res) => {
 
 const getConversationList = async (req, res) => {
   try {
-    const { userId, offset } = req.query;
+    const { userId } = req.query;
     const query = await pool.query(messageQueries.getConversationList, [
       userId,
-      offset,
     ]);
     res.send(query.rows);
   } catch (error) {
