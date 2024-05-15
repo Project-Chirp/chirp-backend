@@ -25,7 +25,19 @@ const updateUserInfo = async (req, res) => {
   res.send({ ...query.rows[0], isLoading: false });
 };
 
+const getUsers = async (req, res) => {
+  try {
+    const { keyword, offset } = req.query;
+    const query = await pool.query(userQueries.getUsers, [keyword, offset]);
+    res.send(query.rows);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
 module.exports = {
   getUserInfo,
   updateUserInfo,
+  getUsers,
 };
