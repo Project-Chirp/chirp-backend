@@ -9,8 +9,9 @@ const getDirectMessage = `
   FROM message
   WHERE "sentUserId" in ($1, $2) 
     AND "receivedUserId" in ($1, $2)
-  ORDER BY timestamp;
-`;
+  ORDER BY timestamp DESC
+  OFFSET ($3 - 1) * 10
+  LIMIT 10`;
 
 const getConversationList = `
   SELECT DISTINCT ON("otherUserId")
@@ -32,8 +33,10 @@ const getConversationList = `
   ) AS s
   JOIN app_user u 
     ON s."otherUserId" = u."userId"
-  ORDER BY "otherUserId", timestamp DESC;
-`;
+  ORDER BY 
+    "otherUserId", 
+    timestamp 
+  DESC`;
 
 const getOtherUser = `
   SELECT

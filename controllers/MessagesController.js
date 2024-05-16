@@ -18,15 +18,27 @@ const addMessage = async (req, res) => {
   }
 };
 
+const getOtherUser = async (req, res) => {
+  try {
+    const { userId2 } = req.params;
+    const userQuery = await pool.query(messageQueries.getOtherUser, [userId2]);
+    res.send(userQuery.rows[0]);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
 const getDirectMessage = async (req, res) => {
   try {
     const { userId1, userId2 } = req.params;
+    const { offset } = req.query;
     const messageQuery = await pool.query(messageQueries.getDirectMessage, [
       userId1,
       userId2,
+      offset,
     ]);
-    const userQuery = await pool.query(messageQueries.getOtherUser, [userId2]);
-    res.send({ messages: messageQuery.rows, otherUser: userQuery.rows[0] });
+    res.send(messageQuery.rows);
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
@@ -79,6 +91,7 @@ const getFollowedList = async (req, res) => {
 
 module.exports = {
   addMessage,
+  getOtherUser,
   getDirectMessage,
   getConversationList,
   getModalConversations,
