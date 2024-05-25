@@ -1,10 +1,28 @@
 const pool = require("../database/db");
 const profileQueries = require("../models/ProfileModel");
 
+const editProfile = async (req, res) => {
+  try {
+    const { displayName, birthDate, bio, userId } = req.body;
+    const query = await pool.query(profileQueries.editProfile, [
+      displayName,
+      birthDate,
+      bio,
+      userId,
+    ]);
+    res.send(query.rows[0]);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
 const getUserPosts = async (req, res) => {
   try {
-    const { username } = req.query;
-    const query = await pool.query(profileQueries.getUserPosts, [username]);
+    const { visitedUserId } = req.query;
+    const query = await pool.query(profileQueries.getUserPosts, [
+      visitedUserId,
+    ]);
     res.send(query.rows);
   } catch (error) {
     console.log(error);
@@ -14,8 +32,10 @@ const getUserPosts = async (req, res) => {
 
 const getUserReplies = async (req, res) => {
   try {
-    const { username } = req.query;
-    const query = await pool.query(profileQueries.getUserReplies, [username]);
+    const { visitedUserId } = req.query;
+    const query = await pool.query(profileQueries.getUserReplies, [
+      visitedUserId,
+    ]);
     res.send(query.rows);
   } catch (error) {
     console.log(error);
@@ -25,8 +45,10 @@ const getUserReplies = async (req, res) => {
 
 const getUserLikes = async (req, res) => {
   try {
-    const { username } = req.query;
-    const query = await pool.query(profileQueries.getUserLikes, [username]);
+    const { visitedUserId } = req.query;
+    const query = await pool.query(profileQueries.getUserLikes, [
+      visitedUserId,
+    ]);
     res.send(query.rows);
   } catch (error) {
     console.log(error);
@@ -36,9 +58,10 @@ const getUserLikes = async (req, res) => {
 
 const getProfileContents = async (req, res) => {
   try {
-    const { username } = req.query;
+    const { currentUserId, visitedUsername } = req.query;
     const query = await pool.query(profileQueries.getProfileContents, [
-      username,
+      currentUserId,
+      visitedUsername,
     ]);
     res.send(query.rows[0]);
   } catch (error) {
@@ -48,6 +71,7 @@ const getProfileContents = async (req, res) => {
 };
 
 module.exports = {
+  editProfile,
   getUserPosts,
   getUserReplies,
   getUserLikes,
