@@ -27,8 +27,8 @@ const updateUserInfo = async (req, res) => {
 
 const getUsers = async (req, res) => {
   try {
-    const { keyword, offset } = req.query;
-    const query = await pool.query(userQueries.getUsers, [keyword, offset]);
+    const { keyword } = req.query;
+    const query = await pool.query(userQueries.getUsers, [keyword]);
     res.send(query.rows);
   } catch (error) {
     console.log(error);

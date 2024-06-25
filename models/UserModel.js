@@ -31,8 +31,7 @@ const getUsers = `
       u."userId", u."displayName", u.username
   ORDER BY 
       follower_count DESC
-  OFFSET ($2 - 1) * 4
-  LIMIT 4;
+  LIMIT 15;
 `;
 
 module.exports = {
