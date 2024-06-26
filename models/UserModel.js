@@ -18,8 +18,7 @@ const getUsers = `
   SELECT 
       u."userId",
       u."displayName",
-      u.username,
-      COUNT(f."followedUserId") AS follower_count
+      u.username
   FROM 
       public.app_user u
   LEFT JOIN 
@@ -30,7 +29,9 @@ const getUsers = `
   GROUP BY 
       u."userId", u."displayName", u.username
   ORDER BY 
-      follower_count DESC
+      (SELECT COUNT(f1."followedUserId") 
+     FROM public.follow f1 
+     WHERE f1."followedUserId" = u."userId") DESC
   LIMIT 15;
 `;
 
