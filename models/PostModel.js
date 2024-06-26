@@ -67,9 +67,8 @@ const getAllPosts = `
     INNER JOIN app_user AS u
       ON p."userId" = u."userId"
   WHERE p."parentPostId" IS NULL
-  ORDER BY p.timestamp DESC
-  OFFSET ($2 - 1) * 10
-  LIMIT 10`;
+  ORDER BY p.timestamp DESC;
+`;
 
 const getPost = `
   WITH post_likes AS (
@@ -158,9 +157,8 @@ const getReplies = `
   INNER JOIN app_user AS u
     ON p."userId" = u."userId"
   WHERE p."parentPostId" = $2
-  ORDER BY "numberOfLikes" DESC, "timestamp" DESC
-  OFFSET ($3 - 1) * 10
-  LIMIT 10`;
+  ORDER BY "numberOfLikes" DESC, "timestamp" DESC;
+`;
 
 const likePost = `INSERT INTO liked_post ("userId", "postId") VALUES 
   ($1, $2)`;

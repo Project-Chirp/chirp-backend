@@ -19,10 +19,9 @@ const editProfile = async (req, res) => {
 
 const getUserPosts = async (req, res) => {
   try {
-    const { userId, offset } = req.query;
+    const { visitedUserId } = req.query;
     const query = await pool.query(profileQueries.getUserPosts, [
-      userId,
-      offset,
+      visitedUserId,
     ]);
     res.send(query.rows);
   } catch (error) {
@@ -33,10 +32,9 @@ const getUserPosts = async (req, res) => {
 
 const getUserReplies = async (req, res) => {
   try {
-    const { userId, offset } = req.query;
+    const { visitedUserId } = req.query;
     const query = await pool.query(profileQueries.getUserReplies, [
-      userId,
-      offset,
+      visitedUserId,
     ]);
     res.send(query.rows);
   } catch (error) {
@@ -47,10 +45,9 @@ const getUserReplies = async (req, res) => {
 
 const getUserLikes = async (req, res) => {
   try {
-    const { userId, offset } = req.query;
+    const { visitedUserId } = req.query;
     const query = await pool.query(profileQueries.getUserLikes, [
-      userId,
-      offset,
+      visitedUserId,
     ]);
     res.send(query.rows);
   } catch (error) {
