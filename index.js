@@ -55,8 +55,6 @@ const currentUserCheck = async (req, res, next) => {
 };
 
 const extractUserId = async (req, res, next) => {
-  console.log("Auth object:", req.auth); // Log the auth object
-
   if (req.auth && req.auth.sub) {
     const auth0Id = req.auth.sub;
     try {
@@ -65,7 +63,6 @@ const extractUserId = async (req, res, next) => {
         [auth0Id]
       );
       const user = query.rows[0];
-      console.log("User found:", user);
       if (user) {
         req.user = user;
       } else {
