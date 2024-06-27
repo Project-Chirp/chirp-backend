@@ -3,7 +3,8 @@ const followQueries = require("../models/FollowModel");
 
 const followUser = async (req, res) => {
   try {
-    const { currentUserId, visitedUserId } = req.body;
+    const { userId: currentUserId } = req.user;
+    const { visitedUserId } = req.body;
     const query = await pool.query(followQueries.followUser, [
       currentUserId,
       visitedUserId,
@@ -17,7 +18,8 @@ const followUser = async (req, res) => {
 
 const unfollowUser = async (req, res) => {
   try {
-    const { currentUserId, visitedUserId } = req.body;
+    const { userId: currentUserId } = req.user;
+    const { visitedUserId } = req.body;
     const query = await pool.query(followQueries.unfollowUser, [
       currentUserId,
       visitedUserId,
