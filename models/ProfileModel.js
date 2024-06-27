@@ -30,7 +30,7 @@ const getUserPosts = `
     EXISTS (
       SELECT 1 
       FROM liked_post li 
-      WHERE li."userId" = u."userId" 
+      WHERE li."userId" = $1
         AND li."postId" = p."postId" 
       LIMIT 1
     ) AS "isLikedByCurrentUser",
@@ -44,7 +44,7 @@ const getUserPosts = `
     ON p."postId" = r."parentPostId"
   INNER JOIN app_user AS u
     ON p."userId" = u."userId"
-  WHERE u."userId" = $1 
+  WHERE u."userId" = $2 
     AND p."parentPostId" IS NULL
   ORDER BY p.timestamp DESC;
 `;
