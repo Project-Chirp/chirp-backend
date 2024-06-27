@@ -42,7 +42,8 @@ const addReply = async (req, res) => {
 
 const getPosts = async (req, res) => {
   try {
-    const { userId } = req.query;
+    const { userId } = req.user;
+    console.log(userId);
     const query = await pool.query(postQueries.getAllPosts, [userId]);
     res.send(query.rows);
   } catch (error) {

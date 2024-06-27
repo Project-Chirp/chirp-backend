@@ -12,7 +12,7 @@ const profileRoute = require("./routes/profileRoutes");
 const messagesRoute = require("./routes/messagesRoutes");
 const followRoute = require("./routes/followRoutes");
 
-const verifyJwt = jwt({
+const jwtMiddleware = jwt({
   secret: jwks.expressJwtSecret({
     cache: true,
     rateLimit: true,
@@ -35,7 +35,7 @@ const currentUserCheck = async (req, res, next) => {
     try {
       const accessToken = req.headers.authorization.split(" ")[1];
       const response = await axios.get(
-        "https://dev-gxkwzphy3vwb5jqh.us.auth0.com/userinfo",
+        `https://${process.env.AUTH0_DOMAIN}/userinfo`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -54,18 +54,45 @@ const currentUserCheck = async (req, res, next) => {
   next();
 };
 
+const extractUserId = async (req, res, next) => {
+  console.log("Auth object:", req.auth); // Log the auth object
+
+  if (req.auth && req.auth.sub) {
+    const auth0Id = req.auth.sub;
+    try {
+      const query = await pool.query(
+        `SELECT "userId" FROM app_user WHERE "auth0Id" = $1`,
+        [auth0Id]
+      );
+      const user = query.rows[0];
+      console.log("User found:", user);
+      if (user) {
+        req.user = user;
+      } else {
+        return res.status(401).send("User not found");
+      }
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send("Server error");
+    }
+  } else {
+    return res.status(401).send("Unauthorized");
+  }
+  next();
+};
 const app = express();
 const port = process.env.SERVER_PORT || 3001;
 require("dotenv").config();
 
 app.use(express.json());
 app.use(cors());
-app.use(verifyJwt);
+app.use(jwtMiddleware.unless({ path: ["/"] }));
 app.use(currentUserCheck);
+
 app.use("/api/users", userRoute);
-app.use("/api/posts", postRoute);
-app.use("/api/profile", profileRoute);
-app.use("/api/messages", messagesRoute);
-app.use("/api/follow/", followRoute);
+app.use("/api/posts", jwtMiddleware, extractUserId, postRoute);
+app.use("/api/profile", jwtMiddleware, extractUserId, profileRoute);
+app.use("/api/messages", jwtMiddleware, extractUserId, messagesRoute);
+app.use("/api/follow/", jwtMiddleware, extractUserId, followRoute);
 
 app.listen(port, () => console.log(`Listening on port ${port}....`));
