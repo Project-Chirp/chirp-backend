@@ -1,10 +1,28 @@
 const pool = require("../database/db");
 const profileQueries = require("../models/ProfileModel");
 
-const getOwnTweets = async (req, res) => {
+const editProfile = async (req, res) => {
   try {
-    const { userId } = req.query;
-    const query = await pool.query(profileQueries.getOwnTweets, [userId]);
+    const { displayName, birthDate, bio, userId } = req.body;
+    const query = await pool.query(profileQueries.editProfile, [
+      displayName,
+      birthDate,
+      bio,
+      userId,
+    ]);
+    res.send(query.rows[0]);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
+const getUserPosts = async (req, res) => {
+  try {
+    const { visitedUserId } = req.query;
+    const query = await pool.query(profileQueries.getUserPosts, [
+      visitedUserId,
+    ]);
     res.send(query.rows);
   } catch (error) {
     console.log(error);
@@ -12,10 +30,12 @@ const getOwnTweets = async (req, res) => {
   }
 };
 
-const getOwnReplies = async (req, res) => {
+const getUserReplies = async (req, res) => {
   try {
-    const { userId } = req.query;
-    const query = await pool.query(profileQueries.getOwnReplies, [userId]);
+    const { visitedUserId } = req.query;
+    const query = await pool.query(profileQueries.getUserReplies, [
+      visitedUserId,
+    ]);
     res.send(query.rows);
   } catch (error) {
     console.log(error);
@@ -23,10 +43,12 @@ const getOwnReplies = async (req, res) => {
   }
 };
 
-const getOwnLikes = async (req, res) => {
+const getUserLikes = async (req, res) => {
   try {
-    const { userId } = req.query;
-    const query = await pool.query(profileQueries.getOwnLikes, [userId]);
+    const { visitedUserId } = req.query;
+    const query = await pool.query(profileQueries.getUserLikes, [
+      visitedUserId,
+    ]);
     res.send(query.rows);
   } catch (error) {
     console.log(error);
@@ -36,8 +58,11 @@ const getOwnLikes = async (req, res) => {
 
 const getProfileContents = async (req, res) => {
   try {
-    const { userId } = req.query;
-    const query = await pool.query(profileQueries.getProfileContents, [userId]);
+    const { currentUserId, visitedUsername } = req.query;
+    const query = await pool.query(profileQueries.getProfileContents, [
+      currentUserId,
+      visitedUsername,
+    ]);
     res.send(query.rows[0]);
   } catch (error) {
     console.log(error);
@@ -46,8 +71,9 @@ const getProfileContents = async (req, res) => {
 };
 
 module.exports = {
-  getOwnTweets,
-  getOwnReplies,
-  getOwnLikes,
+  editProfile,
+  getUserPosts,
+  getUserReplies,
+  getUserLikes,
   getProfileContents,
 };

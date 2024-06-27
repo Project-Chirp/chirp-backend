@@ -4,9 +4,10 @@ const profileController = require("../controllers/ProfileController");
 
 const router = Router();
 
-router.get("/getOwnTweets", profileController.getOwnTweets);
-router.get("/getOwnReplies", profileController.getOwnReplies);
-router.get("/getOwnLikes", profileController.getOwnLikes);
+router.put("/", profileController.editProfile);
 router.get("/getProfileContents", profileController.getProfileContents);
+router.get("/getUserPosts", profileController.getUserPosts);
+router.get("/getUserReplies", profileController.getUserReplies);
+router.get("/getUserLikes", profileController.getUserLikes);
 
 module.exports = router;
