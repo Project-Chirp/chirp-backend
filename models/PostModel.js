@@ -31,6 +31,7 @@ const getAllPosts = `
       "postId", 
       COUNT(*)::INT AS "numberOfLikes"
     FROM liked_post
+	WHERE "postId" IN (SELECT "postId" FROM post WHERE deleted = FALSE)
     GROUP BY "postId"
   ),
   post_replies_reposts AS (
@@ -40,13 +41,14 @@ const getAllPosts = `
       COUNT(CASE WHEN "isRepost" = TRUE THEN 1 END) AS "numberOfReposts"
     FROM post
     WHERE "parentPostId" IS NOT NULL
+	  AND deleted = FALSE
     GROUP BY "parentPostId"
   )
   SELECT 
     p."postId",
     u.username,
     u."displayName",
-	  u."userId",
+    u."userId",
     p."textContent",
     p.timestamp,
     EXISTS (
@@ -67,15 +69,17 @@ const getAllPosts = `
     INNER JOIN app_user AS u
       ON p."userId" = u."userId"
   WHERE p."parentPostId" IS NULL
+  	AND p."deleted" = FALSE
   ORDER BY p.timestamp DESC;
 `;
 
 const getPost = `
-  WITH post_likes AS (
+   WITH post_likes AS (
     SELECT 
       "postId", 
       COUNT(*)::INT AS "numberOfLikes"
     FROM liked_post
+	 WHERE "postId" IN (SELECT "postId" FROM post WHERE deleted = FALSE)
     GROUP BY "postId"
   ),
   post_replies_reposts AS (
@@ -85,6 +89,7 @@ const getPost = `
       COUNT(CASE WHEN "isRepost" = TRUE THEN 1 END) AS "numberOfReposts"
     FROM post
     WHERE "parentPostId" IS NOT NULL
+	  AND deleted = FALSE
     GROUP BY "parentPostId"
   )
   SELECT 
@@ -111,7 +116,8 @@ const getPost = `
     ON p."postId" = r."parentPostId"
   INNER JOIN app_user AS u
     ON p."userId" = u."userId"
-  WHERE p."postId" = $2;
+  WHERE p."postId" = $2
+  	AND p."deleted" = FALSE;
 `;
 
 const getReplies = `
@@ -120,6 +126,7 @@ const getReplies = `
       "postId", 
       COUNT(*)::INT AS "numberOfLikes"
     FROM liked_post
+    WHERE "postId" IN (SELECT "postId" FROM post WHERE deleted = FALSE)
     GROUP BY "postId"
   ),
   post_replies_reposts AS (
@@ -129,6 +136,7 @@ const getReplies = `
       COUNT(CASE WHEN "isRepost" = TRUE THEN 1 END) AS "numberOfReposts"
     FROM post
     WHERE "parentPostId" IS NOT NULL
+      AND deleted = FALSE
     GROUP BY "parentPostId"
   )
   SELECT 
@@ -139,6 +147,7 @@ const getReplies = `
     p."textContent",
     p.timestamp,
     p."parentPostId",
+    parent_post.deleted AS "parentPostDeleted",
     EXISTS (
       SELECT 1 
       FROM liked_post li 
@@ -156,7 +165,10 @@ const getReplies = `
     ON p."postId" = r."parentPostId"
   INNER JOIN app_user AS u
     ON p."userId" = u."userId"
+  LEFT JOIN post AS parent_post
+    ON p."parentPostId" = parent_post."postId"
   WHERE p."parentPostId" = $2
+    AND p."deleted" = FALSE
   ORDER BY "numberOfLikes" DESC, "timestamp" DESC;
 `;
 
