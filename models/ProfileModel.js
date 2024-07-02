@@ -10,16 +10,18 @@ const getUserPosts = `
       "postId", 
       COUNT(*)::INT AS "numberOfLikes"
     FROM liked_post
+    WHERE "postId" IN (SELECT "postId" FROM post WHERE deleted = FALSE)
     GROUP BY "postId"
   ),
   post_replies_reposts AS (
-  	SELECT
+    SELECT
       "parentPostId",
-	    COUNT(*)::INT AS "numberOfReplies",
-	    COUNT(CASE WHEN "isRepost" = TRUE THEN 1 END) AS "numberOfReposts"
-	  FROM post
-	  WHERE "parentPostId" IS NOT NULL
-	  GROUP BY "parentPostId"
+      COUNT(*)::INT AS "numberOfReplies",
+      COUNT(CASE WHEN "isRepost" = TRUE THEN 1 END) AS "numberOfReposts"
+    FROM post
+    WHERE "parentPostId" IS NOT NULL
+      AND deleted = FALSE
+    GROUP BY "parentPostId"
   )
   SELECT 
     p."postId",
@@ -34,7 +36,7 @@ const getUserPosts = `
         AND li."postId" = p."postId" 
       LIMIT 1
     ) AS "isLikedByCurrentUser",
-    COALESCE(l."numberOfLikes",0) AS "numberOfLikes",
+    COALESCE(l."numberOfLikes", 0) AS "numberOfLikes",
     COALESCE(r."numberOfReplies", 0) AS "numberOfReplies",
     COALESCE(r."numberOfReposts", 0) AS "numberOfReposts"
   FROM post AS p
@@ -44,8 +46,9 @@ const getUserPosts = `
     ON p."postId" = r."parentPostId"
   INNER JOIN app_user AS u
     ON p."userId" = u."userId"
-  WHERE u."userId" = $1 
+  WHERE u."userId" = $1
     AND p."parentPostId" IS NULL
+    AND p.deleted = FALSE
   ORDER BY p.timestamp DESC;
 `;
 
@@ -55,15 +58,17 @@ const getUserReplies = `
       "postId", 
       COUNT(*)::INT AS "numberOfLikes"
     FROM liked_post
+    WHERE "postId" IN (SELECT "postId" FROM post WHERE deleted = FALSE)
     GROUP BY "postId"
   ),
   post_replies_reposts AS (
-  	SELECT
+    SELECT
       "parentPostId",
       COUNT(*)::INT AS "numberOfReplies",
       COUNT(CASE WHEN "isRepost" = TRUE THEN 1 END) AS "numberOfReposts"
     FROM post
     WHERE "parentPostId" IS NOT NULL
+      AND deleted = FALSE
     GROUP BY "parentPostId"
   )
   SELECT 
@@ -79,18 +84,21 @@ const getUserReplies = `
         AND li."postId" = p."postId" 
       LIMIT 1
     ) AS "isLikedByCurrentUser",
-    COALESCE(l."numberOfLikes",0) AS "numberOfLikes",
+    COALESCE(l."numberOfLikes", 0) AS "numberOfLikes",
     COALESCE(r."numberOfReplies", 0) AS "numberOfReplies",
     COALESCE(r."numberOfReposts", 0) AS "numberOfReposts"
   FROM post AS p
   LEFT JOIN post_likes AS l
     ON p."postId" = l."postId"
-  LEFT JOIN post_replies_reposts AS r ON
-    p."postId" = r."parentPostId"
+  LEFT JOIN post_replies_reposts AS r
+    ON p."postId" = r."parentPostId"
   INNER JOIN app_user AS u
     ON p."userId" = u."userId"
+  LEFT JOIN post AS parent_post
+    ON p."parentPostId" = parent_post."postId"
   WHERE u."userId" = $1 
     AND p."parentPostId" IS NOT NULL
+    AND p.deleted = FALSE
   ORDER BY p.timestamp DESC;
 `;
 
@@ -100,25 +108,27 @@ const getUserLikes = `
       "postId", 
       COUNT(*)::INT AS "numberOfLikes"
     FROM liked_post
+    WHERE "postId" IN (SELECT "postId" FROM post WHERE deleted = FALSE)
     GROUP BY "postId"
   ),
   post_replies_reposts AS (
-  	SELECT
+    SELECT
       "parentPostId",
       COUNT(*)::INT AS "numberOfReplies",
       COUNT(CASE WHEN "isRepost" = TRUE THEN 1 END) AS "numberOfReposts"
     FROM post
     WHERE "parentPostId" IS NOT NULL
+      AND deleted = FALSE
     GROUP BY "parentPostId"
   )
   SELECT 
     p."postId",
-    u."username",
+    u.username,
     u."displayName",
     p."textContent",
-    p."timestamp",
+    p.timestamp,
     TRUE AS "isLikedByCurrentUser",
-    COALESCE(l."numberOfLikes",0) AS "numberOfLikes",
+    COALESCE(l."numberOfLikes", 0) AS "numberOfLikes",
     COALESCE(r."numberOfReplies", 0) AS "numberOfReplies",
     COALESCE(r."numberOfReposts", 0) AS "numberOfReposts"
   FROM post AS p
@@ -135,8 +145,8 @@ const getUserLikes = `
       ON li."userId" = u."userId"
     WHERE u."userId" = $1
       AND li."postId" = p."postId"
-    LIMIT 1
   )
+    AND p.deleted = FALSE
   ORDER BY p.timestamp DESC;
 `;
 
