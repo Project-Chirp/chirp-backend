@@ -29,6 +29,7 @@ const getUserPosts = `
     u."displayName",
     p."textContent",
     p.timestamp,
+    u."userId",
     EXISTS (
       SELECT 1 
       FROM liked_post li 
@@ -77,6 +78,7 @@ const getUserReplies = `
     u."displayName",
     p."textContent",
     p.timestamp,
+    u."userId",
     EXISTS (
       SELECT 1 
       FROM liked_post li 
@@ -127,6 +129,7 @@ const getUserLikes = `
     u."displayName",
     p."textContent",
     p.timestamp,
+    u."userId",
     TRUE AS "isLikedByCurrentUser",
     COALESCE(l."numberOfLikes", 0) AS "numberOfLikes",
     COALESCE(r."numberOfReplies", 0) AS "numberOfReplies",
