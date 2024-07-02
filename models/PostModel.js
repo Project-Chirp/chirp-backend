@@ -175,7 +175,7 @@ const getReplies = `
 const deletePost = `WITH post_to_delete AS (
   SELECT "postId"
   FROM post
-  WHERE "postId" = $1 AND deleted = FALSE
+  WHERE "postId" = $1 AND "userId" = $2 AND deleted = FALSE
 )
 UPDATE post
 SET deleted = TRUE
