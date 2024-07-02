@@ -172,6 +172,16 @@ const getReplies = `
   ORDER BY "numberOfLikes" DESC, "timestamp" DESC;
 `;
 
+const deletePost = `WITH post_to_delete AS (
+  SELECT "postId"
+  FROM post
+  WHERE "postId" = $1 AND deleted = FALSE
+)
+UPDATE post
+SET deleted = TRUE
+WHERE "postId" IN (SELECT "postId" FROM post_to_delete)
+RETURNING "postId", deleted;`;
+
 const likePost = `INSERT INTO liked_post ("userId", "postId") VALUES 
   ($1, $2)`;
 
@@ -188,4 +198,5 @@ module.exports = {
   getPost,
   getReplies,
   addReply,
+  deletePost,
 };
