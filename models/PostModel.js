@@ -8,7 +8,8 @@ const addPost = `
     "textContent",
     timestamp,
     "isRepost",
-    "isQuotePost";
+    "isQuotePost",
+    "userId";
 `;
 
 const addReply = `
@@ -22,7 +23,8 @@ const addReply = `
     "textContent",
     timestamp,
     "isRepost",
-    "isQuotePost";
+    "isQuotePost",
+    "userId";
 `;
 
 const getAllPosts = `
