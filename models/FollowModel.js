@@ -20,22 +20,24 @@ const getFollowStatus = `
 const getFollowersUserList = `
   SELECT 
     u."userId", 
+    u."username", 
     u."displayName", 
-    u."username"
+    CASE WHEN f2."followerUserId" IS NOT NULL THEN TRUE ELSE FALSE END AS "isFollowing"
   FROM app_user u
-  JOIN follow f
-    ON u."userId" = f. "followerUserId"
+  JOIN follow f ON u."userId" = f."followerUserId"
+  LEFT JOIN follow f2 ON u."userId" = f2."followedUserId" AND f2."followerUserId" = $2
   WHERE f."followedUserId" = $1;
 `;
 
 const getFollowingUserList = `
-  SELECT 
-    u."userId", 
-    u."displayName", 
-    u."username"
+  SELECT
+    u."userId",
+    u."username",
+    u."displayName",
+    CASE WHEN f2."followerUserId" IS NOT NULL THEN TRUE ELSE FALSE END AS "isFollowing"
   FROM app_user u
-  JOIN follow f
-    ON u."userId" = f."followedUserId"
+  JOIN follow f ON u."userId" = f."followedUserId"
+  LEFT JOIN follow f2 ON u."userId" = f2."followedUserId" AND f2."followerUserId" = $2
   WHERE f."followerUserId" = $1;
 `;
 
