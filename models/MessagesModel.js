@@ -30,7 +30,7 @@ const getConversationList = `
     WHERE m."sentUserId" = $1
       OR m."receivedUserId" = $1
   ) AS s
-  JOIN app_user u 
+  INNER JOIN app_user u 
     ON s."otherUserId" = u."userId"
   ORDER BY "otherUserId", timestamp DESC;
 `;
@@ -49,7 +49,7 @@ const getFollowedList = `
     u."displayName", 
     u."username"
   FROM app_user u
-  JOIN follow f
+  INNER JOIN follow f
     ON u."userId" = f."followedUserId"
   WHERE f."followerUserId" = $1;
 `;
