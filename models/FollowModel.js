@@ -17,7 +17,7 @@ const getFollowStatus = `
   ) as "followStatus";
 `;
 
-const getFollowersUserList = `
+const getFollowersList = `
   SELECT 
     u."userId", 
     u."username", 
@@ -32,7 +32,7 @@ const getFollowersUserList = `
   WHERE f1."followedUserId" = $1;
 `;
 
-const getFollowingUserList = `
+const getFollowingList = `
   SELECT
     u."userId",
     u."username",
@@ -48,6 +48,6 @@ module.exports = {
   followUser,
   unfollowUser,
   getFollowStatus,
-  getFollowersUserList,
-  getFollowingUserList,
+  getFollowersList,
+  getFollowingList,
 };

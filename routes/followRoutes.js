@@ -7,6 +7,6 @@ const router = Router();
 router.put("/followUser", followController.followUser);
 router.put("/unfollowUser", followController.unfollowUser);
 router.get("/getFollowStatus", followController.getFollowStatus);
-router.get("/getFollowersUserList", followController.getFollowersUserList);
-router.get("/getFollowingUserList", followController.getFollowingUserList);
+router.get("/getFollowersList", followController.getFollowersList);
+router.get("/getFollowingList", followController.getFollowingList);
 module.exports = router;
