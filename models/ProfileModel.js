@@ -96,8 +96,6 @@ const getUserReplies = `
     ON p."postId" = r."parentPostId"
   INNER JOIN app_user AS u
     ON p."userId" = u."userId"
-  LEFT JOIN post AS parent_post
-    ON p."parentPostId" = parent_post."postId"
   WHERE u."userId" = $1 
     AND p."parentPostId" IS NOT NULL
     AND p.deleted = FALSE
@@ -159,7 +157,7 @@ const getProfileContents = `
       SELECT
         COUNT(*)
         FROM post
-        WHERE "userId" = a."userId"
+        WHERE "userId" = a."userId" AND deleted = FALSE
     ) AS "postCount",
     a."bio",
     a."joinedDate",

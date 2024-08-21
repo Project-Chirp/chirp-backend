@@ -149,7 +149,6 @@ const getReplies = `
     p."textContent",
     p.timestamp,
     p."parentPostId",
-    parent_post.deleted AS "parentPostDeleted",
     EXISTS (
       SELECT 1 
       FROM liked_post li 
@@ -167,22 +166,19 @@ const getReplies = `
     ON p."postId" = r."parentPostId"
   INNER JOIN app_user AS u
     ON p."userId" = u."userId"
-  LEFT JOIN post AS parent_post
-    ON p."parentPostId" = parent_post."postId"
+
   WHERE p."parentPostId" = $2
     AND p."deleted" = FALSE
   ORDER BY "numberOfLikes" DESC, "timestamp" DESC;
 `;
 
-const deletePost = `WITH post_to_delete AS (
-  SELECT "postId"
-  FROM post
-  WHERE "postId" = $1 AND "userId" = $2 AND deleted = FALSE
-)
-UPDATE post
-SET deleted = TRUE
-WHERE "postId" IN (SELECT "postId" FROM post_to_delete)
-RETURNING "postId", deleted;`;
+const deletePost = `
+  UPDATE post
+  SET deleted = TRUE
+  WHERE "postId" = $1
+  AND "userId" = $2
+  AND deleted = FALSE
+  RETURNING "postId", deleted;`;
 
 const likePost = `INSERT INTO liked_post ("userId", "postId") VALUES 
   ($1, $2)`;
