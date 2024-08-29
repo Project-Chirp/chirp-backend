@@ -42,8 +42,8 @@ const addReply = async (req, res) => {
 
 const getPosts = async (req, res) => {
   try {
-    const { userId } = req.query;
-    const query = await pool.query(postQueries.getAllPosts, [userId]);
+    const { userId, offset } = req.query;
+    const query = await pool.query(postQueries.getAllPosts, [userId, offset]);
     res.send(query.rows);
   } catch (error) {
     console.log(error);
@@ -53,8 +53,12 @@ const getPosts = async (req, res) => {
 
 const getReplies = async (req, res) => {
   try {
-    const { userId, postId } = req.query;
-    const query = await pool.query(postQueries.getReplies, [userId, postId]);
+    const { userId, postId, offset } = req.query;
+    const query = await pool.query(postQueries.getReplies, [
+      userId,
+      postId,
+      offset,
+    ]);
     res.send(query.rows);
   } catch (error) {
     console.log(error);
