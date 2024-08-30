@@ -75,8 +75,8 @@ const getPost = async (req, res) => {
 
 const deletePost = async (req, res) => {
   try {
-    const { postId, userId } = req.body;
-    const query = await pool.query(postQueries.deletePost, [postId, userId]);
+    const { postId } = req.body;
+    const query = await pool.query(postQueries.deletePost, [postId]);
     res.send(query.rows[0]);
   } catch (error) {
     console.log(error);

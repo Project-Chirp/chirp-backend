@@ -176,7 +176,6 @@ const deletePost = `
   UPDATE post
   SET deleted = TRUE
   WHERE "postId" = $1
-  AND "userId" = $2
   AND deleted = FALSE`;
 
 const likePost = `INSERT INTO liked_post ("userId", "postId") VALUES 
