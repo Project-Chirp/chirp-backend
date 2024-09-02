@@ -106,6 +106,26 @@ const unlikePost = async (req, res) => {
   }
 };
 
+const updatePost = async (req, res) => {
+  try {
+    const { postId, textContent, editedTimestamp } = req.body;
+
+    if (!postId || !textContent || !editedTimestamp) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    await pool.query(postQueries.updatePost, [
+      postId,
+      textContent,
+      editedTimestamp,
+    ]);
+    res.sendStatus(200);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
 module.exports = {
   addPost,
   getPosts,
@@ -115,4 +135,5 @@ module.exports = {
   getReplies,
   addReply,
   deletePost,
+  updatePost,
 };
