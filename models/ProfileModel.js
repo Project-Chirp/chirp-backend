@@ -30,6 +30,7 @@ const getUserPosts = `
     p."textContent",
     p.timestamp,
     u."userId",
+    p."editedTimestamp",
     EXISTS (
       SELECT 1 
       FROM liked_post li 

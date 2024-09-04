@@ -53,6 +53,7 @@ const getAllPosts = `
     u."userId",
     p."textContent",
     p.timestamp,
+    p."editedTimestamp",
     EXISTS (
       SELECT 1 
       FROM liked_post li 
@@ -101,6 +102,7 @@ const getPost = `
     u."userId",
     p."textContent",
     p.timestamp,
+    p."editedTimestamp",
     EXISTS (
       SELECT 1 
       FROM liked_post li 
@@ -149,6 +151,7 @@ const getReplies = `
     p."textContent",
     p.timestamp,
     p."parentPostId",
+    p."editedTimestamp",
     EXISTS (
       SELECT 1 
       FROM liked_post li 
