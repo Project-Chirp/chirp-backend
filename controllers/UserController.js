@@ -25,10 +25,11 @@ const updateUserInfo = async (req, res) => {
   res.send({ ...query.rows[0], isLoading: false });
 };
 
-const getUsers = async (req, res) => {
+const searchUsers = async (req, res) => {
   try {
     const { keyword } = req.query;
-    const query = await pool.query(userQueries.getUsers, [keyword]);
+    const searchQuery = `%${keyword}%`;
+    const query = await pool.query(userQueries.searchUsers, [searchQuery]);
     res.send(query.rows);
   } catch (error) {
     console.log(error);
@@ -39,5 +40,5 @@ const getUsers = async (req, res) => {
 module.exports = {
   getUserInfo,
   updateUserInfo,
-  getUsers,
+  searchUsers,
 };

@@ -6,6 +6,6 @@ const router = Router();
 
 router.get("/", userController.getUserInfo);
 router.put("/:userId", userController.updateUserInfo);
-router.get("/getUsers", userController.getUsers);
+router.get("/searchUsers", userController.searchUsers);
 
 module.exports = router;

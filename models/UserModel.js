@@ -14,23 +14,19 @@ const updateUserInfo = `
   RETURNING "userId", "displayName", "username";
 `;
 
-const getUsers = `
+const searchUsers = `
   SELECT 
       u."userId",
       u."displayName",
       u.username
   FROM 
-      public.app_user u
-  LEFT JOIN 
-      public.follow f ON u."userId" = f."followedUserId"
+      app_user u
   WHERE 
-      u.username ILIKE '%' || $1 || '%'
-      OR u."displayName" ILIKE '%' || $1 || '%'
-  GROUP BY 
-      u."userId", u."displayName", u.username
+      u.username ILIKE $1
+      OR u."displayName" ILIKE $1
   ORDER BY 
       (SELECT COUNT(f1."followedUserId") 
-     FROM public.follow f1 
+     FROM follow f1 
      WHERE f1."followedUserId" = u."userId") DESC
   LIMIT 15;
 `;
@@ -38,5 +34,5 @@ const getUsers = `
 module.exports = {
   getUserInfo,
   updateUserInfo,
-  getUsers,
+  searchUsers,
 };
