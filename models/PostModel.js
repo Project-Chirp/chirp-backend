@@ -108,6 +108,15 @@ const getPost = `
         AND li."postId" = p."postId" 
       LIMIT 1
     ) AS "isLikedByCurrentUser",
+     CASE
+      WHEN EXISTS (
+        SELECT 1
+        FROM follow WHERE "followerUserId" = $1
+          AND "followedUserId" = u."userId"
+      )
+      THEN TRUE
+      ELSE FALSE
+    END AS "followStatus",
     COALESCE(l."numberOfLikes",0) AS "numberOfLikes",
     COALESCE(r."numberOfReplies", 0) AS "numberOfReplies",
     COALESCE(r."numberOfReposts", 0) AS "numberOfReposts"
