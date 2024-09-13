@@ -12,6 +12,6 @@ router.delete("/deletePost", postController.deletePost);
 router.get("/fetchPost", postController.getPost);
 router.get("/fetchReplies", postController.getReplies);
 router.post("/postReply", postController.addReply);
-router.put("/updatePost", postController.updatePost);
+router.put("/editPost", postController.editPost);
 
 module.exports = router;

@@ -198,7 +198,7 @@ const unlikePost = `DELETE FROM liked_post
     AND "postId" = $2;
 `;
 
-const updatePost = `
+const editPost = `
 UPDATE post as p
 SET "textContent" = $2, 
     "editedTimestamp" = $3
@@ -214,5 +214,5 @@ module.exports = {
   getReplies,
   addReply,
   deletePost,
-  updatePost,
+  editPost,
 };
