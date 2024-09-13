@@ -42,9 +42,9 @@ const getFollowingList = `
       ELSE FALSE 
     END AS "isFollowing"
   FROM app_user u
-  INNER JOIN follow f ON u."userId" = f."followedUserId"
+  INNER JOIN follow f1 ON u."userId" = f1."followedUserId"
   LEFT JOIN follow f2 ON u."userId" = f2."followedUserId" AND f2."followerUserId" = $2
-  WHERE f."followerUserId" = $1;
+  WHERE f1."followerUserId" = $1;
 `;
 
 module.exports = {
