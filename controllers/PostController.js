@@ -73,6 +73,17 @@ const getPost = async (req, res) => {
   }
 };
 
+const deletePost = async (req, res) => {
+  try {
+    const { postId } = req.body;
+    const query = await pool.query(postQueries.deletePost, [postId]);
+    res.send(query.rows[0]);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
 const likePost = async (req, res) => {
   try {
     const { postId, userId } = req.body;
@@ -103,4 +114,5 @@ module.exports = {
   getPost,
   getReplies,
   addReply,
+  deletePost,
 };

@@ -37,7 +37,10 @@ const getFollowingList = `
     u."userId",
     u."username",
     u."displayName",
-    CASE WHEN f2."followerUserId" IS NOT NULL THEN TRUE ELSE FALSE END AS "isFollowing"
+    CASE 
+      WHEN f2."followerUserId" IS NOT NULL THEN TRUE
+      ELSE FALSE 
+    END AS "isFollowing"
   FROM app_user u
   INNER JOIN follow f ON u."userId" = f."followedUserId"
   LEFT JOIN follow f2 ON u."userId" = f2."followedUserId" AND f2."followerUserId" = $2
