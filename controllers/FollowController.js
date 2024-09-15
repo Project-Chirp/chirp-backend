@@ -49,10 +49,10 @@ const getFollowStatus = async (req, res) => {
   }
 };
 
-const getFollowersList = async (req, res) => {
+const getFollowerList = async (req, res) => {
   try {
     const { visitedUserId, currentUserId } = req.query;
-    const query = await pool.query(followQueries.getFollowersList, [
+    const query = await pool.query(followQueries.getFollowerList, [
       visitedUserId,
       currentUserId,
     ]);
@@ -81,6 +81,6 @@ module.exports = {
   followUser,
   unfollowUser,
   getFollowStatus,
-  getFollowersList,
+  getFollowerList,
   getFollowingList,
 };
