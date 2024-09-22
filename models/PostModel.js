@@ -53,6 +53,7 @@ const getAllPosts = `
     u."userId",
     p."textContent",
     p.timestamp,
+    p."editedTimestamp",
     EXISTS (
       SELECT 1 
       FROM liked_post li 
@@ -101,6 +102,7 @@ const getPost = `
     u."userId",
     p."textContent",
     p.timestamp,
+    p."editedTimestamp",
     EXISTS (
       SELECT 1 
       FROM liked_post li 
@@ -158,6 +160,7 @@ const getReplies = `
     p."textContent",
     p.timestamp,
     p."parentPostId",
+    p."editedTimestamp",
     EXISTS (
       SELECT 1 
       FROM liked_post li 
@@ -195,6 +198,13 @@ const unlikePost = `DELETE FROM liked_post
     AND "postId" = $2;
 `;
 
+const editPost = `
+UPDATE post as p
+SET "textContent" = $2, 
+    "editedTimestamp" = $3
+WHERE p."postId" = $1;
+`;
+
 module.exports = {
   addPost,
   getAllPosts,
@@ -204,4 +214,5 @@ module.exports = {
   getReplies,
   addReply,
   deletePost,
+  editPost,
 };
