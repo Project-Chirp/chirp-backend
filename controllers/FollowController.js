@@ -3,7 +3,8 @@ const followQueries = require("../models/FollowModel");
 
 const followUser = async (req, res) => {
   try {
-    const { currentUserId, visitedUserId } = req.body;
+    const { userId: currentUserId } = req.user;
+    const { visitedUserId } = req.body;
     if (currentUserId === visitedUserId) {
       throw new Error("A user cannot follow themselves");
     }
@@ -20,7 +21,8 @@ const followUser = async (req, res) => {
 
 const unfollowUser = async (req, res) => {
   try {
-    const { currentUserId, visitedUserId } = req.body;
+    const { userId: currentUserId } = req.user;
+    const { visitedUserId } = req.body;
     if (currentUserId === visitedUserId) {
       throw new Error("A user cannot unfollow themselves");
     }
