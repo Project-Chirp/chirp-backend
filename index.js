@@ -4,7 +4,6 @@ const cors = require("cors");
 const express = require("express");
 const { expressjwt: jwt } = require("express-jwt");
 const jwks = require("jwks-rsa");
-
 const pool = require("./database/db");
 const userRoute = require("./routes/userRoutes");
 const postRoute = require("./routes/postRoutes");
@@ -54,29 +53,6 @@ const currentUserCheck = async (req, res, next) => {
   next();
 };
 
-const extractUserId = async (req, res, next) => {
-  if (req.auth && req.auth.sub) {
-    const auth0Id = req.auth.sub;
-    try {
-      const query = await pool.query(
-        `SELECT "userId" FROM app_user WHERE "auth0Id" = $1`,
-        [auth0Id]
-      );
-      const user = query.rows[0];
-      if (user) {
-        req.user = user;
-      } else {
-        return res.status(401).send("User not found");
-      }
-    } catch (error) {
-      console.error(error);
-      return res.status(500).send("Server error");
-    }
-  } else {
-    return res.status(401).send("Unauthorized");
-  }
-  next();
-};
 const app = express();
 const port = process.env.SERVER_PORT || 3001;
 require("dotenv").config();
@@ -87,9 +63,9 @@ app.use(jwtMiddleware.unless({ path: ["/"] }));
 app.use(currentUserCheck);
 
 app.use("/api/users", userRoute);
-app.use("/api/posts", jwtMiddleware, extractUserId, postRoute);
-app.use("/api/profile", jwtMiddleware, extractUserId, profileRoute);
-app.use("/api/messages", jwtMiddleware, extractUserId, messagesRoute);
-app.use("/api/follow/", jwtMiddleware, extractUserId, followRoute);
+app.use("/api/posts", jwtMiddleware, postRoute);
+app.use("/api/profile", jwtMiddleware, profileRoute);
+app.use("/api/messages", jwtMiddleware, messagesRoute);
+app.use("/api/follow/", jwtMiddleware, followRoute);
 
 app.listen(port, () => console.log(`Listening on port ${port}....`));

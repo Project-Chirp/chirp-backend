@@ -19,10 +19,9 @@ const editProfile = async (req, res) => {
 
 const getUserPosts = async (req, res) => {
   try {
-    const { userId } = req.user;
-    const { visitedUserId } = req.query;
+    const { currentUserId, visitedUserId } = req.query;
     const query = await pool.query(profileQueries.getUserPosts, [
-      userId,
+      currentUserId,
       visitedUserId,
     ]);
     res.send(query.rows);
@@ -60,8 +59,7 @@ const getUserLikes = async (req, res) => {
 
 const getProfileContents = async (req, res) => {
   try {
-    const { userId: currentUserId } = req.user;
-    const { visitedUsername } = req.query;
+    const { currentUserId, visitedUsername } = req.query;
     const query = await pool.query(profileQueries.getProfileContents, [
       currentUserId,
       visitedUsername,

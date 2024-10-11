@@ -3,8 +3,7 @@ const messageQueries = require("../models/MessagesModel");
 
 const addMessage = async (req, res) => {
   try {
-    const { userId: sentUserId } = req.user;
-    const { receivedUserId, textContent } = req.body;
+    const { receivedUserId, textContent, sentUserId } = req.body;
     const timestamp = new Date();
     const query = await pool.query(messageQueries.addMessage, [
       timestamp,
@@ -36,7 +35,7 @@ const getDirectMessage = async (req, res) => {
 
 const getConversationList = async (req, res) => {
   try {
-    const { userId } = req.user;
+    const { userId } = req.query;
     const query = await pool.query(messageQueries.getConversationList, [
       userId,
     ]);
@@ -49,7 +48,7 @@ const getConversationList = async (req, res) => {
 
 const getModalConversations = async (req, res) => {
   try {
-    const { userId } = req.user;
+    const { userId } = req.query;
     const query = await pool.query(messageQueries.getConversationList, [
       userId,
     ]);
@@ -69,7 +68,7 @@ const getModalConversations = async (req, res) => {
 
 const getFollowedList = async (req, res) => {
   try {
-    const { userId } = req.user;
+    const { userId } = req.query;
     const query = await pool.query(messageQueries.getFollowedList, [userId]);
     res.send(query.rows);
   } catch (error) {

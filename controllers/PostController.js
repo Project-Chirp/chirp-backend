@@ -3,8 +3,7 @@ const postQueries = require("../models/PostModel");
 
 const addPost = async (req, res) => {
   try {
-    const { userId } = req.user;
-    const { textContent } = req.body;
+    const { textContent, userId } = req.body;
     const timestamp = new Date();
     const query = await pool.query(postQueries.addPost, [
       userId,
@@ -23,8 +22,7 @@ const addPost = async (req, res) => {
 
 const addReply = async (req, res) => {
   try {
-    const { userId } = req.user;
-    const { parentPostId, textContent } = req.body;
+    const { parentPostId, textContent, userId } = req.body;
     const timestamp = new Date();
     const query = await pool.query(postQueries.addReply, [
       userId,
@@ -44,7 +42,7 @@ const addReply = async (req, res) => {
 
 const getPosts = async (req, res) => {
   try {
-    const { userId } = req.user;
+    const { userId } = req.body;
     const query = await pool.query(postQueries.getAllPosts, [userId]);
     res.send(query.rows);
   } catch (error) {
@@ -55,8 +53,7 @@ const getPosts = async (req, res) => {
 
 const getReplies = async (req, res) => {
   try {
-    const { userId } = req.user;
-    const { postId } = req.query;
+    const { userId, postId } = req.query;
     const query = await pool.query(postQueries.getReplies, [userId, postId]);
     res.send(query.rows);
   } catch (error) {
@@ -67,8 +64,7 @@ const getReplies = async (req, res) => {
 
 const getPost = async (req, res) => {
   try {
-    const { userId } = req.user;
-    const { postId } = req.query;
+    const { userId, postId } = req.query;
     const query = await pool.query(postQueries.getPost, [userId, postId]);
     res.send(query.rows[0]);
   } catch (error) {
