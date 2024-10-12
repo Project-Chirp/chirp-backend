@@ -34,7 +34,7 @@ const getUserPosts = `
     EXISTS (
       SELECT 1 
       FROM liked_post li 
-      WHERE li."userId" = u."userId" 
+      WHERE li."userId" = u."userId"
         AND li."postId" = p."postId" 
       LIMIT 1
     ) AS "isLikedByCurrentUser",

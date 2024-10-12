@@ -4,7 +4,6 @@ const cors = require("cors");
 const express = require("express");
 const { expressjwt: jwt } = require("express-jwt");
 const jwks = require("jwks-rsa");
-
 const pool = require("./database/db");
 const userRoute = require("./routes/userRoutes");
 const postRoute = require("./routes/postRoutes");
@@ -12,7 +11,7 @@ const profileRoute = require("./routes/profileRoutes");
 const messagesRoute = require("./routes/messagesRoutes");
 const followRoute = require("./routes/followRoutes");
 
-const verifyJwt = jwt({
+const jwtMiddleware = jwt({
   secret: jwks.expressJwtSecret({
     cache: true,
     rateLimit: true,
@@ -35,7 +34,7 @@ const currentUserCheck = async (req, res, next) => {
     try {
       const accessToken = req.headers.authorization.split(" ")[1];
       const response = await axios.get(
-        "https://dev-gxkwzphy3vwb5jqh.us.auth0.com/userinfo",
+        `https://${process.env.AUTH0_DOMAIN}/userinfo`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -60,11 +59,13 @@ require("dotenv").config();
 
 app.use(express.json());
 app.use(cors());
+app.use(jwtMiddleware.unless({ path: ["/"] }));
+app.use(currentUserCheck);
 
-app.use("/api/users", verifyJwt, currentUserCheck, userRoute);
-app.use("/api/posts", postRoute);
-app.use("/api/profile", profileRoute);
-app.use("/api/messages", messagesRoute);
-app.use("/api/follow/", followRoute);
+app.use("/api/users", userRoute);
+app.use("/api/posts", jwtMiddleware, postRoute);
+app.use("/api/profile", jwtMiddleware, profileRoute);
+app.use("/api/messages", jwtMiddleware, messagesRoute);
+app.use("/api/follow/", jwtMiddleware, followRoute);
 
 app.listen(port, () => console.log(`Listening on port ${port}....`));
