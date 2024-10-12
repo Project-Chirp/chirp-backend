@@ -20,7 +20,6 @@ const editProfile = async (req, res) => {
 const getUserPosts = async (req, res) => {
   try {
     const { visitedUserId } = req.query;
-    console.log(visitedUserId);
     const query = await pool.query(profileQueries.getUserPosts, [
       visitedUserId,
     ]);
