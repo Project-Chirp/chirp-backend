@@ -38,7 +38,15 @@ const getConversationList = `
 const getOtherUser = `
   SELECT
     username,
-    "displayName"
+    "displayName",
+    "bio",
+    "joinedDate",
+    (
+      SELECT
+        COUNT(*)
+      FROM follow
+      WHERE "followedUserId" = "userId"
+    ) AS "followerCount"
   FROM app_user
   WHERE "userId" = $1;
 `;
