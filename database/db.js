@@ -1,13 +1,13 @@
 const Pool = require("pg").Pool;
 require("dotenv").config();
 
-const pool = new Pool({
-  user: "postgres",
-  host: "localhost",
-  database: "twitter_clone",
-  // Create a file called .env and create a variable with your password inside it (ie. DB_PASSWORD = "yourpassword")
-  password: process.env.DB_PASSWORD,
-  port: "5432",
-});
+const poolConfig = {
+  max: 5,
+  min: 2,
+  idleTimeoutMillis: 600000,
+  connectionString: process.env.DB_URL + "?sslmode=prefer",
+};
+
+const pool = new Pool(poolConfig);
 
 module.exports = pool;
