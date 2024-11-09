@@ -45,9 +45,9 @@ const getOtherUser = `
       SELECT
         COUNT(*)
       FROM follow
-      WHERE "followedUserId" = "userId"
+      WHERE "followedUserId" = u."userId"
     ) AS "followerCount"
-  FROM app_user
+  FROM app_user as u
   WHERE "userId" = $1;
 `;
 
