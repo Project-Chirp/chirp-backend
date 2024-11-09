@@ -1,4 +1,5 @@
 // Imports
+require("dotenv").config();
 const axios = require("axios");
 const cors = require("cors");
 const express = require("express");
@@ -11,6 +12,12 @@ const postRoute = require("./routes/postRoutes");
 const profileRoute = require("./routes/profileRoutes");
 const messagesRoute = require("./routes/messagesRoutes");
 const followRoute = require("./routes/followRoutes");
+
+const app = express();
+const port = process.env.SERVER_PORT || 3001;
+
+app.use(express.json());
+app.use(cors());
 
 const verifyJwt = jwt({
   secret: jwks.expressJwtSecret({
@@ -35,7 +42,7 @@ const currentUserCheck = async (req, res, next) => {
     try {
       const accessToken = req.headers.authorization.split(" ")[1];
       const response = await axios.get(
-        "https://dev-gxkwzphy3vwb5jqh.us.auth0.com/userinfo",
+        `https://${process.env.AUTH0_DOMAIN}/userinfo`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -53,13 +60,6 @@ const currentUserCheck = async (req, res, next) => {
   }
   next();
 };
-
-const app = express();
-const port = process.env.SERVER_PORT || 3001;
-require("dotenv").config();
-
-app.use(express.json());
-app.use(cors());
 
 app.use("/api/users", verifyJwt, currentUserCheck, userRoute);
 app.use("/api/posts", postRoute);
