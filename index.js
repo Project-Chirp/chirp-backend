@@ -6,11 +6,11 @@ const { expressjwt: jwt } = require("express-jwt");
 const jwks = require("jwks-rsa");
 
 const pool = require("./database/db");
-const userRoute = require("./routes/userRoutes");
+const followRoute = require("./routes/followRoutes");
+const messagesRoute = require("./routes/messagesRoutes");
 const postRoute = require("./routes/postRoutes");
 const profileRoute = require("./routes/profileRoutes");
-const messagesRoute = require("./routes/messagesRoutes");
-const followRoute = require("./routes/followRoutes");
+const userRoute = require("./routes/userRoutes");
 
 const verifyJwt = jwt({
   secret: jwks.expressJwtSecret({
