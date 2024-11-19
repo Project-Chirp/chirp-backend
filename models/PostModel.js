@@ -45,7 +45,21 @@ const getAllPosts = `
     WHERE "parentPostId" IS NOT NULL
 	  AND deleted = FALSE
     GROUP BY "parentPostId"
-  )
+  ),
+    user_reposts AS (
+  SELECT
+    "postId",
+    EXISTS (
+      SELECT 1
+      FROM post AS repost
+      WHERE repost."userId" = $1
+        AND repost."parentPostId" = p."postId"
+        AND repost."isRepost" = TRUE
+        AND repost.deleted = FALSE
+      LIMIT 1
+    ) AS "isRepostedByCurrentUser"
+  FROM post AS p
+)
   SELECT 
     p."postId",
     u.username,
@@ -54,6 +68,7 @@ const getAllPosts = `
     p."textContent",
     p.timestamp,
     p."editedTimestamp",
+    p."isRepost",
     EXISTS (
       SELECT 1 
       FROM liked_post li 
@@ -63,12 +78,15 @@ const getAllPosts = `
     ) AS "isLikedByCurrentUser",
     COALESCE(l."numberOfLikes",0) AS "numberOfLikes",
     COALESCE(r."numberOfReplies", 0) AS "numberOfReplies",
-    COALESCE(r."numberOfReposts", 0) AS "numberOfReposts"
+    COALESCE(r."numberOfReposts", 0) AS "numberOfReposts",
+    ur."isRepostedByCurrentUser"
     FROM post AS p
     LEFT JOIN post_likes AS l
       ON p."postId" = l."postId"
     LEFT JOIN post_replies_reposts AS r
       ON p."postId" = r."parentPostId"
+    LEFT JOIN user_reposts AS ur
+      ON p."postId" = ur."postId"
     INNER JOIN app_user AS u
       ON p."userId" = u."userId"
   WHERE p."parentPostId" IS NULL
@@ -205,6 +223,23 @@ SET "textContent" = $2,
 WHERE p."postId" = $1;
 `;
 
+const addRepost = `
+INSERT INTO post (
+    "userId", "parentPostId", timestamp, "isRepost", "isQuotePost"
+  ) VALUES
+    ($1, $2, $3, $4, $5)
+  RETURNING 
+    "postId";
+`;
+
+const deleteRepost = `
+DELETE FROM post
+WHERE "parentPostId" = $2
+  AND "isRepost" = TRUE
+  AND "userId" = $1
+  AND deleted = FALSE;
+`;
+
 module.exports = {
   addPost,
   getAllPosts,
@@ -215,4 +250,6 @@ module.exports = {
   addReply,
   deletePost,
   editPost,
+  addRepost,
+  deleteRepost,
 };
