@@ -106,6 +106,41 @@ const unlikePost = async (req, res) => {
   }
 };
 
+const addRepost = async (req, res) => {
+  try {
+    const { userId, parentPostId } = req.body;
+    const timestamp = new Date();
+    const query = await pool.query(postQueries.addRepost, [
+      userId,
+      parentPostId,
+      timestamp,
+      true,
+      false,
+    ]);
+    // TODO: Find a way to return the entire post object rather than appending missing attributes in the frontend
+    res.status(201).send(query.rows[0]);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
+const deleteRepost = async (req, res) => {
+  try {
+    const { userId, parentPostId } = req.query;
+    console.log(userId);
+    const query = await pool.query(postQueries.deleteRepost, [
+      userId,
+      parentPostId,
+    ]);
+    // TODO: Find a way to return the entire post object rather than appending missing attributes in the frontend
+    res.status(201).send(query.rows[0]);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
 const editPost = async (req, res) => {
   try {
     const editedTimestamp = new Date();
@@ -137,4 +172,6 @@ module.exports = {
   addReply,
   deletePost,
   editPost,
+  addRepost,
+  deleteRepost,
 };
