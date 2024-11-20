@@ -63,7 +63,7 @@ SELECT
   u.username AS "repostedUsername", 
   u."displayName" AS "repostedDisplayName", 
   COALESCE(p_parent."textContent", p."textContent") AS "textContent", 
-  COALESCE(up.username, u.username) AS username, -- Parent post's username for reposts
+  COALESCE(up.username, u.username) AS username, 
   COALESCE(up."displayName", u."displayName") AS "displayName", 
   p."userId",
   p.timestamp,
@@ -117,7 +117,7 @@ INNER JOIN app_user AS u
   ON p."userId" = u."userId" 
 WHERE p."deleted" = FALSE
 AND (
-    p."parentPostId" IS NULL -- Include original posts
+    p."parentPostId" IS NULL
     OR (p."isRepost" = TRUE OR p."isQuotePost" = TRUE) 
   )
 ORDER BY p.timestamp DESC;
