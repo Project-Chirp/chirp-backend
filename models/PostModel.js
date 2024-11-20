@@ -60,11 +60,11 @@ post_metrics AS (
 SELECT 
   p."postId",
   p."parentPostId",
-  u.username AS "repostedUsername", -- The username of the user who made the repost
-  u."displayName" AS "repostedDisplayName", -- Display name of the user who made the repost
-  COALESCE(p_parent."textContent", p."textContent") AS "textContent", -- Parent post's text for reposts
+  u.username AS "repostedUsername", 
+  u."displayName" AS "repostedDisplayName", 
+  COALESCE(p_parent."textContent", p."textContent") AS "textContent", 
   COALESCE(up.username, u.username) AS username, -- Parent post's username for reposts
-  COALESCE(up."displayName", u."displayName") AS "displayName", -- Parent post's display name for reposts
+  COALESCE(up."displayName", u."displayName") AS "displayName", 
   p."userId",
   p.timestamp,
   p."editedTimestamp",
@@ -110,15 +110,15 @@ LEFT JOIN post_metrics AS lm
 LEFT JOIN post_metrics AS pm
   ON p."parentPostId" = pm."postId"
 LEFT JOIN post AS p_parent
-  ON p."parentPostId" = p_parent."postId" -- Fetch parent post details
+  ON p."parentPostId" = p_parent."postId" 
 LEFT JOIN app_user AS up
-  ON p_parent."userId" = up."userId" -- Fetch user info for parent post
+  ON p_parent."userId" = up."userId" 
 INNER JOIN app_user AS u
-  ON p."userId" = u."userId" -- User info for the repost or original post
+  ON p."userId" = u."userId" 
 WHERE p."deleted" = FALSE
 AND (
     p."parentPostId" IS NULL -- Include original posts
-    OR (p."isRepost" = TRUE OR p."isQuotePost" = TRUE) -- Include reposts or quote posts
+    OR (p."isRepost" = TRUE OR p."isQuotePost" = TRUE) 
   )
 ORDER BY p.timestamp DESC;
 `;
