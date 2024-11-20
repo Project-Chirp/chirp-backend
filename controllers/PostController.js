@@ -128,7 +128,6 @@ const addRepost = async (req, res) => {
 const deleteRepost = async (req, res) => {
   try {
     const { userId, parentPostId } = req.query;
-    console.log(userId);
     const query = await pool.query(postQueries.deleteRepost, [
       userId,
       parentPostId,
