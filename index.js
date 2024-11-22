@@ -10,6 +10,14 @@ const postRoute = require("./routes/postRoutes");
 const profileRoute = require("./routes/profileRoutes");
 const messagesRoute = require("./routes/messagesRoutes");
 const followRoute = require("./routes/followRoutes");
+const { unless } = require("express-unless");
+require("dotenv").config();
+
+const app = express();
+const port = process.env.SERVER_PORT || 3001;
+
+app.use(express.json());
+app.use(cors());
 
 const jwtMiddleware = jwt({
   secret: jwks.expressJwtSecret({
@@ -24,6 +32,7 @@ const jwtMiddleware = jwt({
 }).unless({ path: ["/"] });
 
 const currentUserCheck = async (req, res, next) => {
+  if (!req.auth) return next();
   const auth0Id = req.auth.sub;
   const query = await pool.query(
     `SELECT * FROM app_user WHERE "auth0Id" = $1`,
@@ -53,19 +62,15 @@ const currentUserCheck = async (req, res, next) => {
   next();
 };
 
-const app = express();
-const port = process.env.SERVER_PORT || 3001;
-require("dotenv").config();
+currentUserCheck.unless = unless;
 
-app.use(express.json());
-app.use(cors());
-app.use(jwtMiddleware.unless({ path: ["/"] }));
-app.use(currentUserCheck);
+app.use(jwtMiddleware);
+app.use(currentUserCheck.unless({ path: ["/"] }));
 
 app.use("/api/users", userRoute);
-app.use("/api/posts", jwtMiddleware, postRoute);
-app.use("/api/profile", jwtMiddleware, profileRoute);
-app.use("/api/messages", jwtMiddleware, messagesRoute);
-app.use("/api/follow/", jwtMiddleware, followRoute);
+app.use("/api/posts", postRoute);
+app.use("/api/profile", profileRoute);
+app.use("/api/messages", messagesRoute);
+app.use("/api/follow/", followRoute);
 
 app.listen(port, () => console.log(`Listening on port ${port}....`));
