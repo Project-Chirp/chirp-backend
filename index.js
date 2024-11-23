@@ -10,10 +10,13 @@ const postRoute = require("./routes/postRoutes");
 const profileRoute = require("./routes/profileRoutes");
 const messagesRoute = require("./routes/messagesRoutes");
 const followRoute = require("./routes/followRoutes");
+const { unless } = require("express-unless");
 require("dotenv").config();
 
 const app = express();
 const port = process.env.SERVER_PORT || 3001;
+
+const unauthenticatedRoutes = ["/"];
 
 app.use(express.json());
 app.use(cors());
@@ -28,10 +31,13 @@ const jwtMiddleware = jwt({
   audience: process.env.AUTH0_AUDIENCE,
   issuer: `https://${process.env.AUTH0_DOMAIN}/`,
   algorithms: ["RS256"],
-}).unless({ path: ["/"] });
+}).unless({ path: unauthenticatedRoutes });
 
 const currentUserCheck = async (req, res, next) => {
-  if (!req.auth) return next();
+  if (!req.auth)
+    return res
+      .status(401)
+      .json({ message: "Unauthorized: Missing or invalid auth token" });
   const auth0Id = req.auth.sub;
   const query = await pool.query(
     `SELECT * FROM app_user WHERE "auth0Id" = $1`,
@@ -61,8 +67,10 @@ const currentUserCheck = async (req, res, next) => {
   next();
 };
 
+currentUserCheck.unless = unless;
+
 app.use(jwtMiddleware);
-app.use(currentUserCheck);
+app.use(currentUserCheck.unless({ path: unauthenticatedRoutes }));
 
 app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);
