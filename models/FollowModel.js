@@ -9,14 +9,6 @@ const unfollowUser = `
     AND "followedUserId" = $2;
 `;
 
-const getFollowStatus = `
-  SELECT EXISTS (
-    SELECT 1
-    FROM follow
-    WHERE "followerUserId" = $1 AND "followedUserId" = $2
-  ) as "followStatus";
-`;
-
 const getFollowerList = `
   SELECT 
     u."userId", 
