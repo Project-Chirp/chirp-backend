@@ -42,7 +42,6 @@ const getFollowingList = `
 module.exports = {
   followUser,
   unfollowUser,
-  getFollowStatus,
   getFollowerList,
   getFollowingList,
 };

@@ -10,7 +10,6 @@ const postRoute = require("./routes/postRoutes");
 const profileRoute = require("./routes/profileRoutes");
 const messagesRoute = require("./routes/messagesRoutes");
 const followRoute = require("./routes/followRoutes");
-const { unless } = require("express-unless");
 require("dotenv").config();
 
 const app = express();
@@ -62,10 +61,8 @@ const currentUserCheck = async (req, res, next) => {
   next();
 };
 
-currentUserCheck.unless = unless;
-
 app.use(jwtMiddleware);
-app.use(currentUserCheck.unless({ path: ["/"] }));
+app.use(currentUserCheck);
 
 app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);

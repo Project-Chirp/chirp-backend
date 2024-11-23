@@ -10,8 +10,7 @@ const getUserInfo = async (req, res) => {
 };
 
 const updateUserInfo = async (req, res) => {
-  const { userId } = req.params;
-  const { username, birthDate } = req.body;
+  const { username, birthDate, userId } = req.body;
   let { displayName } = req.body;
   if (!displayName) {
     displayName = username;
