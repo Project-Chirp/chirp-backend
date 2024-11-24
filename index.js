@@ -34,10 +34,11 @@ const jwtMiddleware = jwt({
 }).unless({ path: unauthenticatedRoutes });
 
 const currentUserCheck = async (req, res, next) => {
-  if (!req.auth)
+  if (!req.auth) {
     return res
       .status(401)
       .json({ message: "Unauthorized: Missing or invalid auth token" });
+  }
   const auth0Id = req.auth.sub;
   const query = await pool.query(
     `SELECT * FROM app_user WHERE "auth0Id" = $1`,
@@ -76,6 +77,6 @@ app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);
 app.use("/api/profile", profileRoute);
 app.use("/api/messages", messagesRoute);
-app.use("/api/follow/", followRoute);
+app.use("/api/follow", followRoute);
 
 app.listen(port, () => console.log(`Listening on port ${port}....`));
