@@ -10,8 +10,7 @@ const getUserInfo = async (req, res) => {
 };
 
 const updateUserInfo = async (req, res) => {
-  const { userId } = req.params;
-  const { username, birthDate } = req.body;
+  const { username, birthDate, userId } = req.body;
   let { displayName } = req.body;
   if (!displayName) {
     displayName = username;
@@ -27,8 +26,8 @@ const updateUserInfo = async (req, res) => {
 
 const searchUsers = async (req, res) => {
   try {
-    const { keyword } = req.query;
-    const searchQuery = `%${keyword}%`;
+    const { keywords } = req.query;
+    const searchQuery = `%${keywords}%`;
     const query = await pool.query(userQueries.searchUsers, [searchQuery]);
     res.send(query.rows);
   } catch (error) {
