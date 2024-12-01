@@ -57,7 +57,7 @@ const getModalConversations = async (req, res) => {
         userId: otherUserId,
         displayName,
         username,
-      })
+      }),
     );
     res.send(filteredQuery);
   } catch (error) {

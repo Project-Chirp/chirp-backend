@@ -3,14 +3,14 @@ const axios = require("axios");
 const cors = require("cors");
 const express = require("express");
 const { expressjwt: jwt } = require("express-jwt");
+const { unless } = require("express-unless");
 const jwks = require("jwks-rsa");
 const pool = require("./database/db");
-const userRoute = require("./routes/userRoutes");
+const followRoute = require("./routes/followRoutes");
+const messagesRoute = require("./routes/messagesRoutes");
 const postRoute = require("./routes/postRoutes");
 const profileRoute = require("./routes/profileRoutes");
-const messagesRoute = require("./routes/messagesRoutes");
-const followRoute = require("./routes/followRoutes");
-const { unless } = require("express-unless");
+const userRoute = require("./routes/userRoutes");
 require("dotenv").config();
 
 const app = express();
@@ -42,7 +42,7 @@ const currentUserCheck = async (req, res, next) => {
   const auth0Id = req.auth.sub;
   const query = await pool.query(
     `SELECT * FROM app_user WHERE "auth0Id" = $1`,
-    [auth0Id]
+    [auth0Id],
   );
   const user = query.rows;
   if (user.length == 0) {
@@ -54,12 +54,12 @@ const currentUserCheck = async (req, res, next) => {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
-        }
+        },
       );
       const userInfo = response.data;
       pool.query(
         `INSERT INTO app_user ("auth0Id", email, "joinedDate") VALUES ($1, $2, $3)`,
-        [userInfo.sub, userInfo.email, new Date()]
+        [userInfo.sub, userInfo.email, new Date()],
       );
     } catch (error) {
       console.log(error);
