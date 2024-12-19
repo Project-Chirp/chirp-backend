@@ -1,10 +1,12 @@
 // Imports
+const { createServer } = require("http");
 const axios = require("axios");
 const cors = require("cors");
 const express = require("express");
 const { expressjwt: jwt } = require("express-jwt");
 const { unless } = require("express-unless");
 const jwks = require("jwks-rsa");
+const { Server } = require("socket.io");
 const pool = require("./database/db");
 const followRoute = require("./routes/followRoutes");
 const messagesRoute = require("./routes/messagesRoutes");
@@ -14,7 +16,14 @@ const userRoute = require("./routes/userRoutes");
 require("dotenv").config();
 
 const app = express();
+const server = createServer(app);
 const port = process.env.SERVER_PORT || 3001;
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+  },
+});
 
 const unauthenticatedRoutes = ["/"];
 
@@ -79,4 +88,17 @@ app.use("/api/profile", profileRoute);
 app.use("/api/messages", messagesRoute);
 app.use("/api/follow", followRoute);
 
-app.listen(port, () => console.log(`Listening on port ${port}....`));
+io.on("connection", (socket) => {
+  console.log("User connected: ", socket.id);
+
+  socket.on("message", (message) => {
+    console.log(message);
+    io.emit("message", message);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected: ", socket.id);
+  });
+});
+
+server.listen(port, () => console.log(`Listening on port ${port}....`));
