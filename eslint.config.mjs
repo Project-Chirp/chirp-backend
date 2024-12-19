@@ -12,6 +12,7 @@ export default [
   eslintPluginPrettierRecommended,
   {
     rules: {
+      "no-unused-vars": "warn",
       "import-x/order": [
         "error",
         {
