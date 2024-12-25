@@ -13,26 +13,33 @@ const getDirectMessage = `
 `;
 
 const getConversationList = `
-  SELECT DISTINCT ON("otherUserId")
-    "displayName",
-    username,
-    "textContent",
-    timestamp,
-    s."otherUserId"
-  FROM (
-    SELECT m.*,
-      CASE
-        WHEN "sentUserId" = $1 
+  WITH
+  cte1 AS (
+    SELECT
+      "messageId",
+      timestamp,
+      "textContent",
+      CASE WHEN "sentUserId" = $1 
         THEN "receivedUserId" 
         ELSE "sentUserId" 
       END AS "otherUserId"
     FROM message m
-    WHERE m."sentUserId" = $1
-      OR m."receivedUserId" = $1
-  ) AS s
-  INNER JOIN app_user u 
-    ON s."otherUserId" = u."userId"
-  ORDER BY "otherUserId", timestamp DESC;
+    WHERE m."sentUserId" = $1 OR m."receivedUserId" = $1
+  ),
+  cte2 AS (
+    SELECT DISTINCT ON("otherUserId")
+    "displayName",
+      username,
+      "textContent",
+      timestamp,
+      "otherUserId"
+    FROM cte1
+    INNER JOIN app_user u 
+        ON cte1."otherUserId" = u."userId"
+    ORDER BY "otherUserId", timestamp DESC
+  )
+  SELECT * FROM cte2
+  ORDER BY timestamp DESC
 `;
 
 const getOtherUser = `
