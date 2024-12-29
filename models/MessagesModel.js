@@ -4,15 +4,7 @@ const addMessage = `
   RETURNING *;
 `;
 
-const getDirectMessage = `
-  SELECT *
-  FROM message
-  WHERE "sentUserId" in ($1, $2) 
-    AND "receivedUserId" in ($1, $2)
-  ORDER BY timestamp;
-`;
-
-const getConversationList = `
+const getConversations = `
   WITH
   cte1 AS (
     SELECT
@@ -42,22 +34,6 @@ const getConversationList = `
   ORDER BY timestamp DESC
 `;
 
-const getOtherUser = `
-  SELECT
-    username,
-    "displayName",
-    "bio",
-    "joinedDate",
-    (
-      SELECT
-        COUNT(*)
-      FROM follow
-      WHERE "followedUserId" = u."userId"
-    ) AS "followerCount"
-  FROM app_user as u
-  WHERE "userId" = $1;
-`;
-
 const getFollowedList = `
   SELECT 
     u."userId", 
@@ -69,10 +45,35 @@ const getFollowedList = `
   WHERE f."followerUserId" = $1;
 `;
 
+const getMessages = `
+  SELECT *
+  FROM message
+  WHERE "sentUserId" in ($1, $2) 
+    AND "receivedUserId" in ($1, $2)
+  ORDER BY timestamp;
+`;
+
+const getOtherUser = `
+  SELECT
+    username,
+    "displayName",
+    "bio",
+    "joinedDate",
+    (
+      SELECT
+        COUNT(*)
+      FROM follow
+      WHERE "followedUserId" = u."userId"
+    ) AS "followerCount",
+     "userId"
+  FROM app_user as u
+  WHERE "userId" = $1;
+`;
+
 module.exports = {
   addMessage,
-  getDirectMessage,
-  getConversationList,
+  getConversations,
   getFollowedList,
+  getMessages,
   getOtherUser,
 };
