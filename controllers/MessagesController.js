@@ -48,7 +48,10 @@ const getMessages = async (req, res) => {
       userId2,
     ]);
     const userQuery = await pool.query(messageQueries.getOtherUser, [userId2]);
-    res.send({ messages: messageQuery.rows, otherUser: userQuery.rows[0] });
+    res.send({
+      messages: messageQuery.rows,
+      otherUserDetail: userQuery.rows[0],
+    });
   } catch (error) {
     console.log(error);
     res.status(500).send(error);

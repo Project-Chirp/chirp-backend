@@ -5,26 +5,26 @@ const addMessage = `
 `;
 
 const getConversations = `
-  SELECT DISTINCT ON("otherUserId")
+  SELECT DISTINCT ON("userId")
     "displayName",
     username,
     "textContent",
     timestamp,
-    s."otherUserId"
+    s."userId"
   FROM (
     SELECT m.*,
       CASE
         WHEN "sentUserId" = $1 
         THEN "receivedUserId" 
         ELSE "sentUserId" 
-      END AS "otherUserId"
+      END AS "userId"
     FROM message m
     WHERE m."sentUserId" = $1
       OR m."receivedUserId" = $1
   ) AS s
   INNER JOIN app_user u 
-    ON s."otherUserId" = u."userId"
-  ORDER BY "otherUserId", timestamp DESC;
+    ON s."userId" = u."userId"
+  ORDER BY "userId", timestamp DESC;
 `;
 
 const getFollowedList = `
@@ -57,7 +57,8 @@ const getOtherUser = `
         COUNT(*)
       FROM follow
       WHERE "followedUserId" = u."userId"
-    ) AS "followerCount"
+    ) AS "followerCount",
+     "userId"
   FROM app_user as u
   WHERE "userId" = $1;
 `;
