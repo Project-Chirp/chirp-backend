@@ -14,21 +14,21 @@ const getConversations = `
       CASE WHEN "sentUserId" = $1 
         THEN "receivedUserId" 
         ELSE "sentUserId" 
-      END AS "otherUserId"
+      END AS "userId"
     FROM message m
     WHERE m."sentUserId" = $1 OR m."receivedUserId" = $1
   ),
   cte2 AS (
-    SELECT DISTINCT ON("otherUserId")
-    "displayName",
+    SELECT DISTINCT ON("userId")
+      "displayName",
       username,
       "textContent",
       timestamp,
-      "otherUserId"
+      cte1."userId"
     FROM cte1
     INNER JOIN app_user u 
-        ON cte1."otherUserId" = u."userId"
-    ORDER BY "otherUserId", timestamp DESC
+        ON cte1."userId" = u."userId"
+    ORDER BY "userId", timestamp DESC
   )
   SELECT * FROM cte2
   ORDER BY timestamp DESC
@@ -65,7 +65,7 @@ const getOtherUser = `
       FROM follow
       WHERE "followedUserId" = u."userId"
     ) AS "followerCount",
-     "userId"
+    "userId"
   FROM app_user as u
   WHERE "userId" = $1;
 `;
