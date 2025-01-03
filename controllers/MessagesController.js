@@ -47,10 +47,10 @@ const getMessages = async (req, res) => {
       userId1,
       userId2,
     ]);
-    const userQuery = await pool.query(messageQueries.getOtherUser, [userId2]);
+    const chatBioQuery = await pool.query(messageQueries.getChatBio, [userId2]);
     res.send({
       messages: messageQuery.rows,
-      otherUserDetail: userQuery.rows[0],
+      chatBio: chatBioQuery.rows[0],
     });
   } catch (error) {
     console.log(error);
