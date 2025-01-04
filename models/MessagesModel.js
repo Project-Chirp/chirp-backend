@@ -4,6 +4,23 @@ const addMessage = `
   RETURNING *;
 `;
 
+const getChatBio = `
+  SELECT
+    username,
+    "displayName",
+    "bio",
+    "joinedDate",
+    (
+      SELECT
+        COUNT(*)
+      FROM follow
+      WHERE "followedUserId" = u."userId"
+    ) AS "followerCount",
+    "userId"
+  FROM app_user as u
+  WHERE "userId" = $1;
+`;
+
 const getConversations = `
   WITH
   cte1 AS (
@@ -53,27 +70,10 @@ const getMessages = `
   ORDER BY timestamp;
 `;
 
-const getOtherUser = `
-  SELECT
-    username,
-    "displayName",
-    "bio",
-    "joinedDate",
-    (
-      SELECT
-        COUNT(*)
-      FROM follow
-      WHERE "followedUserId" = u."userId"
-    ) AS "followerCount",
-    "userId"
-  FROM app_user as u
-  WHERE "userId" = $1;
-`;
-
 module.exports = {
   addMessage,
+  getChatBio,
   getConversations,
   getFollowedList,
   getMessages,
-  getOtherUser,
 };
