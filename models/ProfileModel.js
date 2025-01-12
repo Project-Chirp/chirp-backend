@@ -41,7 +41,7 @@ const getUserPosts = `
     EXISTS (
       SELECT 1 
       FROM post p2
-      WHERE p2."repostedBy" = 3 
+      WHERE p2."repostedBy" = u."userId" 
         AND p2."textContent" IS NULL
 		    AND p2."postId" = p."postId" 
       LIMIT 1
@@ -98,7 +98,7 @@ const getUserReplies = `
     EXISTS (
       SELECT 1 
       FROM post p2
-      WHERE p2."repostedBy" = 3 
+      WHERE p2."repostedBy" = u."userId" 
         AND p2."textContent" IS NULL
 		    AND p2."postId" = p."postId" 
       LIMIT 1
@@ -149,7 +149,7 @@ const getUserLikes = `
     EXISTS (
       SELECT 1 
       FROM post p2
-      WHERE p2."repostedBy" = 3 
+      WHERE p2."repostedBy" = u."userId" 
         AND p2."textContent" IS NULL
 		    AND p2."postId" = p."postId" 
       LIMIT 1

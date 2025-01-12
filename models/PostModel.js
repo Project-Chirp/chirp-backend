@@ -64,12 +64,12 @@ const getAllPosts = `
     EXISTS (
       SELECT 1 
       FROM post p2
-      WHERE p2."repostedBy" = 3 
+      WHERE p2."repostedBy" = $1 
         AND p2."textContent" IS NULL
 		    AND p2."postId" = p."postId" 
       LIMIT 1
     ) AS "isRepostedByCurrentUser",
-    COALESCE(l."numberOfLikes",0) AS "numberOfLikes",
+    COALESCE(l."numberOfLikes", 0) AS "numberOfLikes",
     COALESCE(r."numberOfReplies", 0) AS "numberOfReplies",
     COALESCE(r."numberOfReposts", 0) AS "numberOfReposts"
     FROM post AS p
@@ -121,7 +121,7 @@ const getPost = `
     EXISTS (
       SELECT 1 
       FROM post p2
-      WHERE p2."repostedBy" = 3 
+      WHERE p2."repostedBy" = $1 
         AND p2."textContent" IS NULL
 		    AND p2."postId" = p."postId" 
       LIMIT 1
@@ -135,7 +135,7 @@ const getPost = `
       THEN TRUE
       ELSE FALSE
     END AS "followStatus",
-    COALESCE(l."numberOfLikes",0) AS "numberOfLikes",
+    COALESCE(l."numberOfLikes", 0) AS "numberOfLikes",
     COALESCE(r."numberOfReplies", 0) AS "numberOfReplies",
     COALESCE(r."numberOfReposts", 0) AS "numberOfReposts"
   FROM post AS p
@@ -187,12 +187,12 @@ const getReplies = `
     EXISTS (
       SELECT 1 
       FROM post p2
-      WHERE p2."repostedBy" = 3 
+      WHERE p2."repostedBy" = $1 
         AND p2."textContent" IS NULL
 		    AND p2."postId" = p."postId" 
       LIMIT 1
     ) AS "isRepostedByCurrentUser",
-    COALESCE(l."numberOfLikes",0) AS "numberOfLikes",
+    COALESCE(l."numberOfLikes", 0) AS "numberOfLikes",
     COALESCE(r."numberOfReplies", 0) AS "numberOfReplies",
     COALESCE(r."numberOfReposts", 0) AS "numberOfReposts"
   FROM post AS p
