@@ -38,6 +38,14 @@ const getUserPosts = `
         AND li."postId" = p."postId" 
       LIMIT 1
     ) AS "isLikedByCurrentUser",
+    EXISTS (
+      SELECT 1 
+      FROM post p2
+      WHERE p2."repostedBy" = 3 
+        AND p2."textContent" IS NULL
+		    AND p2."postId" = p."postId" 
+      LIMIT 1
+    ) AS "isRepostedByCurrentUser",
     COALESCE(l."numberOfLikes", 0) AS "numberOfLikes",
     COALESCE(r."numberOfReplies", 0) AS "numberOfReplies",
     COALESCE(r."numberOfReposts", 0) AS "numberOfReposts"
@@ -87,6 +95,14 @@ const getUserReplies = `
         AND li."postId" = p."postId" 
       LIMIT 1
     ) AS "isLikedByCurrentUser",
+    EXISTS (
+      SELECT 1 
+      FROM post p2
+      WHERE p2."repostedBy" = 3 
+        AND p2."textContent" IS NULL
+		    AND p2."postId" = p."postId" 
+      LIMIT 1
+    ) AS "isRepostedByCurrentUser",
     COALESCE(l."numberOfLikes", 0) AS "numberOfLikes",
     COALESCE(r."numberOfReplies", 0) AS "numberOfReplies",
     COALESCE(r."numberOfReposts", 0) AS "numberOfReposts"
@@ -130,6 +146,14 @@ const getUserLikes = `
     p.timestamp,
     u."userId",
     TRUE AS "isLikedByCurrentUser",
+    EXISTS (
+      SELECT 1 
+      FROM post p2
+      WHERE p2."repostedBy" = 3 
+        AND p2."textContent" IS NULL
+		    AND p2."postId" = p."postId" 
+      LIMIT 1
+    ) AS "isRepostedByCurrentUser",
     COALESCE(l."numberOfLikes", 0) AS "numberOfLikes",
     COALESCE(r."numberOfReplies", 0) AS "numberOfReplies",
     COALESCE(r."numberOfReposts", 0) AS "numberOfReposts"
