@@ -17,7 +17,7 @@ const getUserPosts = `
     SELECT
       "parentPostId",
       COUNT(*)::INT AS "numberOfReplies",
-      COUNT(CASE WHEN "isRepost" = TRUE THEN 1 END) AS "numberOfReposts"
+      COUNT(CASE WHEN "repostedBy" IS NOT NULL THEN 1 END) AS "numberOfReposts"
     FROM post
     WHERE "parentPostId" IS NOT NULL
       AND deleted = FALSE
@@ -49,7 +49,7 @@ const getUserPosts = `
   INNER JOIN app_user AS u
     ON p."userId" = u."userId"
   WHERE u."userId" = $1
-    AND p."parentPostId" IS NULL
+    AND NOT(p."parentPostId" IS NOT NULL AND p."repostedBy" IS NULL) -- Filter out replies
     AND p.deleted = FALSE
   ORDER BY p.timestamp DESC;
 `;
@@ -67,7 +67,7 @@ const getUserReplies = `
     SELECT
       "parentPostId",
       COUNT(*)::INT AS "numberOfReplies",
-      COUNT(CASE WHEN "isRepost" = TRUE THEN 1 END) AS "numberOfReposts"
+      COUNT(CASE WHEN "repostedBy" IS NOT NULL THEN 1 END) AS "numberOfReposts"
     FROM post
     WHERE "parentPostId" IS NOT NULL
       AND deleted = FALSE
@@ -116,7 +116,7 @@ const getUserLikes = `
     SELECT
       "parentPostId",
       COUNT(*)::INT AS "numberOfReplies",
-      COUNT(CASE WHEN "isRepost" = TRUE THEN 1 END) AS "numberOfReposts"
+      COUNT(CASE WHEN "repostedBy" IS NOT NULL THEN 1 END) AS "numberOfReposts"
     FROM post
     WHERE "parentPostId" IS NOT NULL
       AND deleted = FALSE
