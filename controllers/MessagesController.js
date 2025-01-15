@@ -3,7 +3,7 @@ const messageQueries = require("../models/MessagesModel");
 
 const addMessage = async (req, res) => {
   try {
-    const { sentUserId, receivedUserId, textContent } = req.body;
+    const { receivedUserId, textContent, sentUserId } = req.body;
     const timestamp = new Date();
     const query = await pool.query(messageQueries.addMessage, [
       timestamp,
@@ -57,7 +57,7 @@ const getModalConversations = async (req, res) => {
         userId: otherUserId,
         displayName,
         username,
-      })
+      }),
     );
     res.send(filteredQuery);
   } catch (error) {

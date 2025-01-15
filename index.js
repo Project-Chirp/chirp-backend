@@ -3,16 +3,25 @@ const axios = require("axios");
 const cors = require("cors");
 const express = require("express");
 const { expressjwt: jwt } = require("express-jwt");
+const { unless } = require("express-unless");
 const jwks = require("jwks-rsa");
-
 const pool = require("./database/db");
-const userRoute = require("./routes/userRoutes");
+const followRoute = require("./routes/followRoutes");
+const messagesRoute = require("./routes/messagesRoutes");
 const postRoute = require("./routes/postRoutes");
 const profileRoute = require("./routes/profileRoutes");
-const messagesRoute = require("./routes/messagesRoutes");
-const followRoute = require("./routes/followRoutes");
+const userRoute = require("./routes/userRoutes");
+require("dotenv").config();
 
-const verifyJwt = jwt({
+const app = express();
+const port = process.env.SERVER_PORT || 3001;
+
+const unauthenticatedRoutes = ["/"];
+
+app.use(express.json());
+app.use(cors());
+
+const jwtMiddleware = jwt({
   secret: jwks.expressJwtSecret({
     cache: true,
     rateLimit: true,
@@ -22,30 +31,35 @@ const verifyJwt = jwt({
   audience: process.env.AUTH0_AUDIENCE,
   issuer: `https://${process.env.AUTH0_DOMAIN}/`,
   algorithms: ["RS256"],
-}).unless({ path: ["/"] });
+}).unless({ path: unauthenticatedRoutes });
 
 const currentUserCheck = async (req, res, next) => {
+  if (!req.auth) {
+    return res
+      .status(401)
+      .json({ message: "Unauthorized: Missing or invalid auth token" });
+  }
   const auth0Id = req.auth.sub;
   const query = await pool.query(
     `SELECT * FROM app_user WHERE "auth0Id" = $1`,
-    [auth0Id]
+    [auth0Id],
   );
   const user = query.rows;
   if (user.length == 0) {
     try {
       const accessToken = req.headers.authorization.split(" ")[1];
       const response = await axios.get(
-        "https://dev-gxkwzphy3vwb5jqh.us.auth0.com/userinfo",
+        `https://${process.env.AUTH0_DOMAIN}/userinfo`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
-        }
+        },
       );
       const userInfo = response.data;
       pool.query(
         `INSERT INTO app_user ("auth0Id", email, "joinedDate") VALUES ($1, $2, $3)`,
-        [userInfo.sub, userInfo.email, new Date()]
+        [userInfo.sub, userInfo.email, new Date()],
       );
     } catch (error) {
       console.log(error);
@@ -54,17 +68,15 @@ const currentUserCheck = async (req, res, next) => {
   next();
 };
 
-const app = express();
-const port = process.env.SERVER_PORT || 3001;
-require("dotenv").config();
+currentUserCheck.unless = unless;
 
-app.use(express.json());
-app.use(cors());
+app.use(jwtMiddleware);
+app.use(currentUserCheck.unless({ path: unauthenticatedRoutes }));
 
-app.use("/api/users", verifyJwt, currentUserCheck, userRoute);
+app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);
 app.use("/api/profile", profileRoute);
 app.use("/api/messages", messagesRoute);
-app.use("/api/follow/", followRoute);
+app.use("/api/follow", followRoute);
 
 app.listen(port, () => console.log(`Listening on port ${port}....`));
