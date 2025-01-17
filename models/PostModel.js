@@ -74,9 +74,15 @@ const getAllPosts = `
     COALESCE(r."numberOfReposts", 0) AS "numberOfReposts"
     FROM post AS p
     LEFT JOIN post_likes AS l
-      ON p."postId" = l."postId"
+      ON l."postId" = CASE
+	  	WHEN p."repostedBy" IS NOT NULL AND p."textContent" IS NULL THEN p."parentPostId" -- Get stats of original post if it's a repost
+		  ELSE p."postId"
+		  END
     LEFT JOIN post_replies_reposts AS r
-      ON p."postId" = r."parentPostId"
+      ON r."parentPostId" = CASE
+	  	WHEN p."repostedBy" IS NOT NULL AND p."textContent" IS NULL THEN p."parentPostId" -- Get stats of original post if it's a repost
+		  ELSE p."postId"
+		  END
     INNER JOIN app_user AS u
       ON p."userId" = u."userId"
     WHERE NOT(p."parentPostId" IS NOT NULL AND p."repostedBy" IS NULL) -- Filter out replies
@@ -140,9 +146,15 @@ const getPost = `
     COALESCE(r."numberOfReposts", 0) AS "numberOfReposts"
   FROM post AS p
   LEFT JOIN post_likes AS l
-    ON p."postId" = l."postId"
+    ON l."postId" = CASE
+    WHEN p."repostedBy" IS NOT NULL AND p."textContent" IS NULL THEN p."parentPostId" -- Get stats of original post if it's a repost
+    ELSE p."postId"
+    END
   LEFT JOIN post_replies_reposts AS r
-    ON p."postId" = r."parentPostId"
+    ON r."parentPostId" = CASE
+    WHEN p."repostedBy" IS NOT NULL AND p."textContent" IS NULL THEN p."parentPostId" -- Get stats of original post if it's a repost
+    ELSE p."postId"
+    END
   INNER JOIN app_user AS u
     ON p."userId" = u."userId"
   WHERE p."postId" = $2
