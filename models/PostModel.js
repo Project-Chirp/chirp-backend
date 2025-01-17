@@ -89,12 +89,11 @@ const getAllPosts = `
     COALESCE(r."numberOfReposts", 0) AS "numberOfReposts",
     CASE
       WHEN p."repostedBy" IS NOT NULL THEN json_build_object(
-        'originalPostId', parent_post_content."originalPostId",
-        'originalTextContent', parent_post_content."originalTextContent",
-        'originalTimestamp', parent_post_content."originalTimestamp",
-        'originalPostUsername', parent_post_content."originalPostUsername",
-        'originalEditedTimestamp', parent_post_content."originalEditedTimestamp",
-        'originalDisplayName', parent_post_content."originalDisplayName"
+        'textContent', parent_post_content."originalTextContent",
+        'timestamp', parent_post_content."originalTimestamp",
+        'username', parent_post_content."originalPostUsername",
+        'editedTimestamp', parent_post_content."originalEditedTimestamp",
+        'displayName', parent_post_content."originalDisplayName"
       )
       ELSE NULL
 	  END AS "originalPostContent"
