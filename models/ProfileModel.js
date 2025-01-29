@@ -222,7 +222,7 @@ const getProfileContents = `
       )
       THEN TRUE
       ELSE FALSE
-    END AS "followStatus"
+    END AS "isFollowing"
   FROM app_user AS a
   WHERE a."username" = $2;
 `;
