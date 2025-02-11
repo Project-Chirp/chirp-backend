@@ -17,7 +17,7 @@ const getUserPosts = `
     SELECT
       "parentPostId",
       COUNT(*)::INT AS "numberOfReplies",
-      COUNT(CASE WHEN "isRepost" = TRUE THEN 1 END) AS "numberOfReposts"
+      COUNT(CASE WHEN "repostedBy" IS NOT NULL THEN 1 END) AS "numberOfReposts"
     FROM post
     WHERE "parentPostId" IS NOT NULL
       AND deleted = FALSE
@@ -38,18 +38,32 @@ const getUserPosts = `
         AND li."postId" = p."postId" 
       LIMIT 1
     ) AS "isLikedByCurrentUser",
+    EXISTS (
+      SELECT 1 
+      FROM post p2
+      WHERE p2."repostedBy" = u."userId" 
+        AND p2."textContent" IS NULL
+		    AND p2."postId" = p."postId" 
+      LIMIT 1
+    ) AS "isRepostedByCurrentUser",
     COALESCE(l."numberOfLikes", 0) AS "numberOfLikes",
     COALESCE(r."numberOfReplies", 0) AS "numberOfReplies",
     COALESCE(r."numberOfReposts", 0) AS "numberOfReposts"
   FROM post AS p
   LEFT JOIN post_likes AS l
-    ON p."postId" = l."postId"
+    ON l."postId" = CASE
+    WHEN p."repostedBy" IS NOT NULL AND p."textContent" IS NULL THEN p."parentPostId" -- Get stats of original post if it's a repost
+    ELSE p."postId"
+    END
   LEFT JOIN post_replies_reposts AS r
-    ON p."postId" = r."parentPostId"
+    ON r."parentPostId" = CASE
+    WHEN p."repostedBy" IS NOT NULL AND p."textContent" IS NULL THEN p."parentPostId" -- Get stats of original post if it's a repost
+    ELSE p."postId"
+    END
   INNER JOIN app_user AS u
     ON p."userId" = u."userId"
   WHERE u."userId" = $1
-    AND p."parentPostId" IS NULL
+    AND NOT(p."parentPostId" IS NOT NULL AND p."repostedBy" IS NULL) -- Filter out replies
     AND p.deleted = FALSE
   ORDER BY p.timestamp DESC;
 `;
@@ -67,7 +81,7 @@ const getUserReplies = `
     SELECT
       "parentPostId",
       COUNT(*)::INT AS "numberOfReplies",
-      COUNT(CASE WHEN "isRepost" = TRUE THEN 1 END) AS "numberOfReposts"
+      COUNT(CASE WHEN "repostedBy" IS NOT NULL THEN 1 END) AS "numberOfReposts"
     FROM post
     WHERE "parentPostId" IS NOT NULL
       AND deleted = FALSE
@@ -87,6 +101,14 @@ const getUserReplies = `
         AND li."postId" = p."postId" 
       LIMIT 1
     ) AS "isLikedByCurrentUser",
+    EXISTS (
+      SELECT 1 
+      FROM post p2
+      WHERE p2."repostedBy" = u."userId" 
+        AND p2."textContent" IS NULL
+		    AND p2."postId" = p."postId" 
+      LIMIT 1
+    ) AS "isRepostedByCurrentUser",
     COALESCE(l."numberOfLikes", 0) AS "numberOfLikes",
     COALESCE(r."numberOfReplies", 0) AS "numberOfReplies",
     COALESCE(r."numberOfReposts", 0) AS "numberOfReposts"
@@ -116,7 +138,7 @@ const getUserLikes = `
     SELECT
       "parentPostId",
       COUNT(*)::INT AS "numberOfReplies",
-      COUNT(CASE WHEN "isRepost" = TRUE THEN 1 END) AS "numberOfReposts"
+      COUNT(CASE WHEN "repostedBy" IS NOT NULL THEN 1 END) AS "numberOfReposts"
     FROM post
     WHERE "parentPostId" IS NOT NULL
       AND deleted = FALSE
@@ -130,6 +152,14 @@ const getUserLikes = `
     p.timestamp,
     u."userId",
     TRUE AS "isLikedByCurrentUser",
+    EXISTS (
+      SELECT 1 
+      FROM post p2
+      WHERE p2."repostedBy" = u."userId" 
+        AND p2."textContent" IS NULL
+		    AND p2."postId" = p."postId" 
+      LIMIT 1
+    ) AS "isRepostedByCurrentUser",
     COALESCE(l."numberOfLikes", 0) AS "numberOfLikes",
     COALESCE(r."numberOfReplies", 0) AS "numberOfReplies",
     COALESCE(r."numberOfReposts", 0) AS "numberOfReposts"
@@ -137,9 +167,15 @@ const getUserLikes = `
   INNER JOIN app_user AS u
     ON p."userId" = u."userId"
   LEFT JOIN post_likes AS l
-    ON p."postId" = l."postId"
+    ON l."postId" = CASE
+    WHEN p."repostedBy" IS NOT NULL AND p."textContent" IS NULL THEN p."parentPostId" -- Get stats of original post if it's a repost
+    ELSE p."postId"
+    END
   LEFT JOIN post_replies_reposts AS r
-    ON p."postId" = r."parentPostId"
+    ON r."parentPostId" = CASE
+    WHEN p."repostedBy" IS NOT NULL AND p."textContent" IS NULL THEN p."parentPostId" -- Get stats of original post if it's a repost
+    ELSE p."postId"
+    END
   WHERE EXISTS (
     SELECT 1
     FROM liked_post li
@@ -186,7 +222,7 @@ const getProfileContents = `
       )
       THEN TRUE
       ELSE FALSE
-    END AS "followStatus"
+    END AS "isFollowing"
   FROM app_user AS a
   WHERE a."username" = $2;
 `;

@@ -15,5 +15,6 @@ router.get("/fetchPost", postController.getPost);
 router.get("/fetchReplies", postController.getReplies);
 router.post("/postReply", postController.addReply);
 router.put("/editPost", postController.editPost);
+router.put("/addRepost", postController.addRepost);
 
 module.exports = router;
