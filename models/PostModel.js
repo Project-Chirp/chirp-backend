@@ -1,29 +1,25 @@
 const addPost = `
   INSERT INTO post (
-    "userId", timestamp, "textContent", "isRepost", "isQuotePost"
+    "userId", timestamp, "textContent"
   ) VALUES 
-    ($1, $2, $3, $4, $5)
+    ($1, $2, $3)
   RETURNING 
     "postId",
     "textContent",
     timestamp,
-    "isRepost",
-    "isQuotePost",
     "userId";
 `;
 
 const addReply = `
   INSERT INTO post (
-    "userId", "parentPostId", timestamp, "textContent", "isRepost", "isQuotePost"
+    "userId", "parentPostId", timestamp, "textContent"
   ) VALUES
-    ($1, $2, $3, $4, $5, $6)
+    ($1, $2, $3, $4)
   RETURNING 
     "postId",
     "parentPostId",
     "textContent",
     timestamp,
-    "isRepost",
-    "isQuotePost",
     "userId";
 `;
 
@@ -268,6 +264,13 @@ SET "textContent" = $2,
 WHERE p."postId" = $1;
 `;
 
+const addRepost = `
+  INSERT INTO post (
+  "userId", "parentPostId",  timestamp, "repostedBy"
+) VALUES 
+  ($1, $2, $3, $1);
+  `;
+
 module.exports = {
   addPost,
   getAllPosts,
@@ -278,4 +281,5 @@ module.exports = {
   addReply,
   deletePost,
   editPost,
+  addRepost,
 };

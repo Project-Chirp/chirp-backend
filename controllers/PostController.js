@@ -9,8 +9,6 @@ const addPost = async (req, res) => {
       userId,
       timestamp,
       textContent,
-      false,
-      false,
     ]);
     // TODO: Find a way to return the entire post object rather than appending missing attributes in the frontend
     res.status(201).send(query.rows[0]);
@@ -29,8 +27,6 @@ const addReply = async (req, res) => {
       parentPostId,
       timestamp,
       textContent,
-      false,
-      false,
     ]);
     // TODO: Find a way to return the entire post object rather than appending missing attributes in the frontend
     res.status(201).send(query.rows[0]);
@@ -127,6 +123,21 @@ const editPost = async (req, res) => {
   }
 };
 
+const addRepost = async (req, res) => {
+  try {
+    const { userId, parentPostId } = req.body;
+    console.log(parentPostId);
+
+    const timestamp = new Date();
+
+    await pool.query(postQueries.addRepost, [userId, parentPostId, timestamp]);
+    res.sendStatus(200);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
 module.exports = {
   addPost,
   getPosts,
@@ -137,4 +148,5 @@ module.exports = {
   addReply,
   deletePost,
   editPost,
+  addRepost,
 };
