@@ -269,7 +269,11 @@ const addRepost = `
   INSERT INTO post (
   "userId", "parentPostId",  timestamp, "repostedBy"
 ) VALUES 
-  ($1, $2, $3, $1);
+  ($1, $2, $3, $1)
+    RETURNING 
+    "postId",
+    "parentPostId",
+    "userId";
   `;
 
 module.exports = {
