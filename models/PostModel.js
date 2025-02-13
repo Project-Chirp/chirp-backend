@@ -35,8 +35,8 @@ const getAllPosts = `
   post_replies_reposts AS (
     SELECT 
       "parentPostId",
-      COUNT(*)::INT AS "numberOfReplies",
-      COUNT(CASE WHEN "repostedBy" IS NOT NULL THEN 1 END) AS "numberOfReposts"
+      COUNT(CASE WHEN "repostedBy" IS NULL THEN 1 END)::INT AS "numberOfReplies",
+      COUNT(CASE WHEN "repostedBy" IS NOT NULL THEN 1 END)::INT AS "numberOfReposts"
     FROM post
     WHERE "parentPostId" IS NOT NULL
 	  AND deleted = FALSE

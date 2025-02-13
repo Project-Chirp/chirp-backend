@@ -126,10 +126,7 @@ const editPost = async (req, res) => {
 const addRepost = async (req, res) => {
   try {
     const { userId, parentPostId } = req.body;
-    console.log(parentPostId);
-
     const timestamp = new Date();
-
     const query = await pool.query(postQueries.addRepost, [
       userId,
       parentPostId,
@@ -137,7 +134,6 @@ const addRepost = async (req, res) => {
     ]);
 
     // TODO: Find a way to return the entire post object rather than appending missing attributes in the frontend
-
     res.status(201).send(query.rows[0]);
   } catch (error) {
     console.log(error);
