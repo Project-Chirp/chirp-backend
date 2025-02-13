@@ -24,7 +24,7 @@ const addReply = `
 `;
 
 const getAllPosts = `
-  WITH post_likes AS (
+ WITH post_likes AS (
     SELECT
       "postId", 
       COUNT(*)::INT AS "numberOfLikes"
@@ -64,21 +64,26 @@ const getAllPosts = `
     u."userId",
     p."textContent",
     p.timestamp,
+    p."parentPostId",
+    ru."displayName" AS "repostedByDisplayName",
     p."editedTimestamp",
     EXISTS (
       SELECT 1 
       FROM liked_post li 
-      WHERE li."userId" = $1 
-        AND li."postId" = p."postId" 
+      WHERE li."userId" = $1
+        AND (p."parentPostId" = li."postId"
+		    OR p."postId" = li."postId")
+        AND p."deleted" = FALSE
       LIMIT 1
     ) AS "isLikedByCurrentUser",
     EXISTS (
       SELECT 1 
       FROM post p2
-      WHERE p2."repostedBy" = 7
+      WHERE p2."repostedBy" = $1
         AND p2."textContent" IS NULL
-		    AND (p2."parentPostId" = p."postId"
-		OR p2."postId" = p."postId") 
+		    AND (p2."parentPostId" = COALESCE(p."parentPostId", p."postId")
+		    OR p2."postId" = COALESCE(p."parentPostId", p."postId"))
+        AND p2."deleted" = FALSE
       LIMIT 1
     ) AS "isRepostedByCurrentUser",
     COALESCE(l."numberOfLikes", 0) AS "numberOfLikes",
@@ -109,6 +114,8 @@ const getAllPosts = `
 		ON parent_post_content."repostId" = p."postId"
     INNER JOIN app_user AS u
       ON p."userId" = u."userId"
+    LEFT JOIN app_user AS ru
+      ON ru."userId" = p."repostedBy"
     WHERE NOT(p."parentPostId" IS NOT NULL AND p."repostedBy" IS NULL) -- Filter out replies
   	AND p."deleted" = FALSE
   ORDER BY p.timestamp DESC;
