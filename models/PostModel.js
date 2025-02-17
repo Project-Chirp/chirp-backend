@@ -86,6 +86,15 @@ const getAllPosts = `
         AND p2."deleted" = FALSE
       LIMIT 1
     ) AS "isRepostedByCurrentUser",
+     CASE
+      WHEN EXISTS (
+        SELECT 1
+        FROM follow WHERE "followerUserId" = $1
+          AND "followedUserId" = u."userId"
+      )
+      THEN TRUE
+      ELSE FALSE
+    END AS "followStatus",
     COALESCE(l."numberOfLikes", 0) AS "numberOfLikes",
     COALESCE(r."numberOfReplies", 0) AS "numberOfReplies",
     COALESCE(r."numberOfReposts", 0) AS "numberOfReposts",
@@ -133,8 +142,8 @@ const getPost = `
   post_replies_reposts AS (
     SELECT 
       "parentPostId",
-      COUNT(*)::INT AS "numberOfReplies",
-      COUNT(CASE WHEN "repostedBy" IS NOT NULL THEN 1 END) AS "numberOfReposts"
+      COUNT(CASE WHEN "repostedBy" IS NULL THEN 1 END)::INT AS "numberOfReplies",
+      COUNT(CASE WHEN "repostedBy" IS NOT NULL THEN 1 END)::INT AS "numberOfReposts"
     FROM post
     WHERE "parentPostId" IS NOT NULL
 	  AND deleted = FALSE
@@ -204,8 +213,8 @@ const getReplies = `
   post_replies_reposts AS (
     SELECT
       "parentPostId",
-      COUNT(*)::INT AS "numberOfReplies",
-      COUNT(CASE WHEN "repostedBy" IS NOT NULL THEN 1 END) AS "numberOfReposts"
+      COUNT(CASE WHEN "repostedBy" IS NULL THEN 1 END)::INT AS "numberOfReplies",
+      COUNT(CASE WHEN "repostedBy" IS NOT NULL THEN 1 END)::INT AS "numberOfReposts"
     FROM post
     WHERE "parentPostId" IS NOT NULL
       AND deleted = FALSE
@@ -247,6 +256,7 @@ const getReplies = `
     ON p."userId" = u."userId"
 
   WHERE p."parentPostId" = $2
+    AND "repostedBy" IS NULL
     AND p."deleted" = FALSE
   ORDER BY "numberOfLikes" DESC, "timestamp" DESC;
 `;
