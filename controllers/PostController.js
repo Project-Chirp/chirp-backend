@@ -141,6 +141,17 @@ const addRepost = async (req, res) => {
   }
 };
 
+const undoRepost = async (req, res) => {
+  try {
+    const { postId } = req.body;
+    const query = await pool.query(postQueries.undoRepost, [postId]);
+    res.send(query.rows[0]);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
 module.exports = {
   addPost,
   getPosts,
@@ -152,4 +163,5 @@ module.exports = {
   deletePost,
   editPost,
   addRepost,
+  undoRepost,
 };

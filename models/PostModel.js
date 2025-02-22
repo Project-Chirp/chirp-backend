@@ -283,15 +283,36 @@ WHERE p."postId" = $1;
 `;
 
 const addRepost = `
-  INSERT INTO post (
-  "userId", "parentPostId",  timestamp, "repostedBy"
-) VALUES 
-  ($1, $2, $3, $1)
-    RETURNING 
-    "postId",
-    "parentPostId",
-    "userId";
+  WITH existing AS (
+      SELECT "postId", "parentPostId", "userId"
+      FROM post
+      WHERE "userId" = $1
+        AND "parentPostId" = $2
+        AND "repostedBy" = $1
+        AND deleted = TRUE
+      LIMIT 1
+  ), updated AS (
+      UPDATE post
+      SET deleted = FALSE, timestamp = $3
+      WHERE "postId" IN (SELECT "postId" FROM existing)
+      RETURNING "postId", "parentPostId", "userId"
+  ), inserted AS (
+      INSERT INTO post ("userId", "parentPostId", timestamp, "repostedBy", deleted)
+      SELECT $1, $2, $3, $1, FALSE
+      WHERE NOT EXISTS (SELECT 1 FROM existing)
+      RETURNING "postId", "parentPostId", "userId"
+  )
+  SELECT * FROM updated
+  UNION ALL
+  SELECT * FROM inserted;
   `;
+
+const undoRepost = `
+  UPDATE post
+  SET deleted = TRUE
+  WHERE "postId" = $1
+  RETURNING "postId", "parentPostId", "userId";
+`;
 
 module.exports = {
   addPost,
@@ -304,4 +325,5 @@ module.exports = {
   deletePost,
   editPost,
   addRepost,
+  undoRepost,
 };
