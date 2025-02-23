@@ -239,9 +239,10 @@ const getReplies = `
     EXISTS (
       SELECT 1 
       FROM post p2
-      WHERE p2."repostedBy" = $1 
+      WHERE p2."repostedBy" = $1
         AND p2."textContent" IS NULL
-		    AND p2."postId" = p."postId" 
+		    AND (p2."parentPostId" = p."postId")
+        AND p2."deleted" = FALSE
       LIMIT 1
     ) AS "isRepostedByCurrentUser",
     COALESCE(l."numberOfLikes", 0) AS "numberOfLikes",
