@@ -311,7 +311,9 @@ const addRepost = `
 const undoRepost = `
   UPDATE post
   SET deleted = TRUE
-  WHERE "postId" = $1
+  WHERE "parentPostId" = $1 
+    AND "repostedBy" = $2        
+    AND "deleted" = FALSE  
   RETURNING "postId", "parentPostId", "userId";
 `;
 

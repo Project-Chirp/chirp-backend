@@ -143,8 +143,8 @@ const addRepost = async (req, res) => {
 
 const undoRepost = async (req, res) => {
   try {
-    const { postId } = req.body;
-    const query = await pool.query(postQueries.undoRepost, [postId]);
+    const { postId, userId } = req.body;
+    const query = await pool.query(postQueries.undoRepost, [postId, userId]);
     res.send(query.rows[0]);
   } catch (error) {
     console.log(error);
