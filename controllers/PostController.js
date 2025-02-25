@@ -152,6 +152,25 @@ const undoRepost = async (req, res) => {
   }
 };
 
+const addQuotePost = async (req, res) => {
+  try {
+    const { userId, parentPostId, textContent } = req.body;
+    const timestamp = new Date();
+    const query = await pool.query(postQueries.addQuotePost, [
+      userId,
+      parentPostId,
+      textContent,
+      timestamp,
+    ]);
+
+    // TODO: Find a way to return the entire post object rather than appending missing attributes in the frontend
+    res.status(201).send(query.rows[0]);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
 module.exports = {
   addPost,
   getPosts,
@@ -164,4 +183,5 @@ module.exports = {
   editPost,
   addRepost,
   undoRepost,
+  addQuotePost,
 };

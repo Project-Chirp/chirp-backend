@@ -8,7 +8,6 @@ router.get("/", postController.getPosts);
 router.post("/", postController.addPost);
 router.post("/likePost", postController.likePost);
 router.delete("/unlikePost", postController.unlikePost);
-router.post("/addRepost", postController.addRepost);
 router.delete("/deletePost", postController.deletePost);
 router.get("/fetchPost", postController.getPost);
 router.get("/fetchReplies", postController.getReplies);
@@ -16,5 +15,6 @@ router.post("/postReply", postController.addReply);
 router.put("/editPost", postController.editPost);
 router.put("/addRepost", postController.addRepost);
 router.put("/undoRepost", postController.undoRepost);
+router.post("/addQuotePost", postController.addQuotePost);
 
 module.exports = router;

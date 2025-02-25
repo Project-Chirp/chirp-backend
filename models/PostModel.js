@@ -43,19 +43,20 @@ const getAllPosts = `
     GROUP BY "parentPostId"
   ),
   parent_post_content AS (
-	  SELECT
-	  	p."postId" AS "repostId",
-	  	parent_post."postId" AS "originalPostId",
+    SELECT
+      p."postId" AS "repostId",
+      parent_post."postId" AS "originalPostId",
       parent_post."textContent" AS "originalTextContent",
       parent_post."timestamp" AS "originalTimestamp",
-		  "username" AS "originalPostUsername",
-	  	parent_post."editedTimestamp" AS "originalEditedTimestamp",
-		  "displayName" AS "originalDisplayName"
-	  FROM post p
-	  INNER JOIN post AS parent_post
-	  	ON parent_post."postId" = p."parentPostId" AND p."repostedBy" IS NOT NULL
-	  INNER JOIN app_user AS u
-	  	ON parent_post."userId" = u."userId"
+      "username" AS "originalPostUsername",
+      parent_post."editedTimestamp" AS "originalEditedTimestamp",
+      "displayName" AS "originalDisplayName"
+    FROM post p
+    INNER JOIN post AS parent_post
+      ON parent_post."postId" = p."parentPostId"
+      AND p."repostedBy" IS NOT NULL
+    INNER JOIN app_user AS u
+      ON parent_post."userId" = u."userId"
   )
   SELECT 
     p."postId",
@@ -107,26 +108,26 @@ const getAllPosts = `
         'displayName', parent_post_content."originalDisplayName"
       )
       ELSE NULL
-	  END AS "originalPostContent"
+    END AS "originalPostContent"
     FROM post AS p
     LEFT JOIN post_likes AS l
       ON l."postId" = CASE
-	  	WHEN p."repostedBy" IS NOT NULL AND p."textContent" IS NULL THEN p."parentPostId" -- Get stats of original post if it's a repost
-		  ELSE p."postId"
-		  END
+        WHEN p."repostedBy" IS NOT NULL AND p."textContent" IS NULL THEN p."parentPostId"
+        ELSE p."postId"
+      END
     LEFT JOIN post_replies_reposts AS r
       ON r."parentPostId" = CASE
-	  	WHEN p."repostedBy" IS NOT NULL AND p."textContent" IS NULL THEN p."parentPostId" -- Get stats of original post if it's a repost
-		  ELSE p."postId"
-		  END
-	LEFT JOIN parent_post_content
-		ON parent_post_content."repostId" = p."postId"
+        WHEN p."repostedBy" IS NOT NULL AND p."textContent" IS NULL THEN p."parentPostId"
+        ELSE p."postId"
+      END
+    LEFT JOIN parent_post_content
+      ON parent_post_content."repostId" = p."postId"
     INNER JOIN app_user AS u
       ON p."userId" = u."userId"
     LEFT JOIN app_user AS ru
       ON ru."userId" = p."repostedBy"
-    WHERE NOT(p."parentPostId" IS NOT NULL AND p."repostedBy" IS NULL) -- Filter out replies
-  	AND p."deleted" = FALSE
+    WHERE NOT(p."parentPostId" IS NOT NULL AND p."repostedBy" IS NULL) -- Filters out replies
+    AND p."deleted" = FALSE
   ORDER BY p.timestamp DESC;
 `;
 
@@ -318,6 +319,19 @@ const undoRepost = `
   RETURNING "postId", "parentPostId", "userId";
 `;
 
+const addQuotePost = `
+  INSERT INTO post (
+    "userId", "repostedBy", "parentPostId", "textContent",  timestamp
+  ) VALUES 
+    ($1, $1, $2, $3, $4)
+  RETURNING 
+    "postId",
+    "parentPostId",
+    "textContent",
+    timestamp,
+    "userId";
+`;
+
 module.exports = {
   addPost,
   getAllPosts,
@@ -330,4 +344,5 @@ module.exports = {
   editPost,
   addRepost,
   undoRepost,
+  addQuotePost,
 };
