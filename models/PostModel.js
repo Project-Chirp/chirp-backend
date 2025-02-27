@@ -50,7 +50,23 @@ const getAllPosts = `
       parent_post."timestamp" AS "originalTimestamp",
       "username" AS "originalPostUsername",
       parent_post."editedTimestamp" AS "originalEditedTimestamp",
-      "displayName" AS "originalDisplayName"
+      "displayName" AS "originalDisplayName",
+	  CASE
+      WHEN parent_post."parentPostId" IS NOT NULL AND parent_post."textContent" IS NOT NULL THEN (
+        SELECT json_build_object(
+          'postId', grand_parent_post."postId",
+          'textContent', grand_parent_post."textContent",
+          'timestamp', grand_parent_post."timestamp",
+          'username', gpu."username",
+          'editedTimestamp', grand_parent_post."editedTimestamp",
+          'displayName', gpu."displayName"
+        )
+        FROM post grand_parent_post
+        INNER JOIN app_user gpu ON grand_parent_post."userId" = gpu."userId"
+        WHERE grand_parent_post."postId" = parent_post."parentPostId"
+      )
+      ELSE NULL
+    END AS "quotedPostContent"
     FROM post p
     INNER JOIN post AS parent_post
       ON parent_post."postId" = p."parentPostId"
@@ -85,6 +101,7 @@ const getAllPosts = `
 		    AND (p2."parentPostId" = COALESCE(p."parentPostId", p."postId")
 		    OR p2."postId" = COALESCE(p."parentPostId", p."postId"))
         AND p2."deleted" = FALSE
+        AND NOT (p."textContent" IS NOT NULL AND p."parentPostId" IS NOT NULL)
       LIMIT 1
     ) AS "isRepostedByCurrentUser",
      CASE
@@ -101,23 +118,27 @@ const getAllPosts = `
     COALESCE(r."numberOfReposts", 0) AS "numberOfReposts",
     CASE
       WHEN p."repostedBy" IS NOT NULL THEN json_build_object(
+        'postId', parent_post_content."originalPostId",
         'textContent', parent_post_content."originalTextContent",
         'timestamp', parent_post_content."originalTimestamp",
         'username', parent_post_content."originalPostUsername",
         'editedTimestamp', parent_post_content."originalEditedTimestamp",
-        'displayName', parent_post_content."originalDisplayName"
+        'displayName', parent_post_content."originalDisplayName",
+		    'quotedPostContent', parent_post_content."quotedPostContent"
       )
       ELSE NULL
     END AS "originalPostContent"
     FROM post AS p
     LEFT JOIN post_likes AS l
       ON l."postId" = CASE
-        WHEN p."repostedBy" IS NOT NULL AND p."textContent" IS NULL THEN p."parentPostId"
+        WHEN p."repostedBy" IS NOT NULL AND p."textContent" IS NULL 
+        THEN p."parentPostId"
         ELSE p."postId"
       END
     LEFT JOIN post_replies_reposts AS r
       ON r."parentPostId" = CASE
-        WHEN p."repostedBy" IS NOT NULL AND p."textContent" IS NULL THEN p."parentPostId"
+        WHEN p."repostedBy" IS NOT NULL AND p."textContent" IS NULL 
+        THEN p."parentPostId"
         ELSE p."postId"
       END
     LEFT JOIN parent_post_content
